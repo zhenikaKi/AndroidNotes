@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="item_padding">10dp</dimen>
+    <dimen name="title_size">16sp</dimen>
+    <dimen name="description_size">14sp</dimen>
+    <dimen name="date_size">10sp</dimen>
+    <dimen name="item_date_padding">6dp</dimen>
+    <dimen name="zero_size">0dp</dimen>
+</resources>

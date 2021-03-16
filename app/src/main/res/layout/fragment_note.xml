@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".views.fragments.NoteFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/note_item_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/item_padding">
+
+        <!-- название заметки -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_title_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent">
+            <EditText
+                android:id="@+id/edit_title_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/edit_title_hint"
+                android:inputType="textCapSentences"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- описание заметки -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_description_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/item_padding"
+            app:layout_constraintTop_toBottomOf="@id/input_title_id">
+            <EditText
+                android:id="@+id/edit_description_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/edit_description_hint"
+                android:inputType="textCapSentences|textMultiLine"
+                android:minLines="5"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- дата создания заметки -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_date_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/item_padding"
+            app:layout_constraintTop_toBottomOf="@id/input_description_id">
+            <EditText
+                android:id="@+id/edit_date_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/edit_date_hint"
+                android:inputType="textCapSentences"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/update_title_id"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/update_title"
+            android:layout_marginTop="@dimen/item_padding"
+            app:layout_constraintTop_toBottomOf="@id/input_date_id"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <!-- дата обновления заметки -->
+        <TextView
+            android:id="@+id/update_value_id"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/item_padding"
+            android:layout_marginStart="@dimen/item_padding"
+            app:layout_constraintTop_toBottomOf="@id/input_date_id"
+            app:layout_constraintStart_toEndOf="@id/update_title_id"/>
+
+        <!-- сохранение изменений -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_save_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_save"
+            android:layout_marginTop="@dimen/item_padding"
+            app:layout_constraintTop_toBottomOf="@+id/update_title_id"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

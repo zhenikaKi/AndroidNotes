@@ -1,9 +1,8 @@
 package ru.kirea.androidnotes.views.activities;
 
+import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import ru.kirea.androidnotes.R;
-
-import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
 
