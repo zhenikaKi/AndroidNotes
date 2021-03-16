@@ -8,7 +8,11 @@ public class DateHelper {
     public enum DateFormat {DDMMYYYY, DDMMYYYY_HHMM, DDMMYYYY_HHMMSS}
 
     //перевести timestamp в читаемую дату
-    public static String timestampToString(long millis, DateFormat dateFormat) {
+    public static String timestampToString(Long millis, DateFormat dateFormat) {
+        if (millis == null) {
+            return null;
+        }
+
         String patter;
         if (dateFormat == DateFormat.DDMMYYYY_HHMM) {
             patter = "dd.MM.yyyy HH:mm";
