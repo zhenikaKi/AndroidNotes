@@ -3,7 +3,7 @@ package ru.kirea.androidnotes.models;
 import ru.kirea.androidnotes.helpers.DateHelper;
 
 public class Note {
-    private static long incrementId = 1; //для автоматического заполнения id'шника задачи
+    private static long incrementId = 1; //для автоматического заполнения id'шника заметки
 
     private long id;
     private String title;
@@ -58,14 +58,4 @@ public class Note {
         this.createDate = createDate;
     }
 
-    @Override
-    public String toString() {
-        return "Note{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", createDate=" + createDate + " (" + DateHelper.timestampToString(createDate, DateHelper.DateFormat.DDMMYYYY_HHMMSS) + ") " +
-                ", updateDate=" + updateDate + " (" + DateHelper.timestampToString(updateDate, DateHelper.DateFormat.DDMMYYYY_HHMMSS) + ") " +
-                '}';
-    }
 }
