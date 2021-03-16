@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorDarkPrimary">#7CAFAB</color>
+    <color name="colorDarkPrimaryDark">#202020</color>
+    <color name="colorDarkAccent">#EBEBBD</color>
+</resources>
