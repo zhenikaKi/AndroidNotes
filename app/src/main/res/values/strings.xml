@@ -7,4 +7,8 @@
     <string name="edit_date_hint">Дата создания</string>
     <string name="button_save">Сохранить</string>
     <string name="update_title">Дата обновления:</string>
+    <string name="edit_time_hint">Время создания</string>
+    <string name="title_null">Пустое название</string>
+    <string name="description_null">Пустое описание</string>
+    <string name="create_null">Пустая дата или время</string>
 </resources>

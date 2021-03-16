@@ -18,6 +18,14 @@ public class Note {
         createDate = System.currentTimeMillis();
     }
 
+    public Note(long id, String title, String description, long createDate) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.createDate = createDate;
+        updateDate = System.currentTimeMillis();
+    }
+
     public long getId() {
         return id;
     }

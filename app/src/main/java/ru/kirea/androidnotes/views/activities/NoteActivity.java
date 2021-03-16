@@ -1,11 +1,11 @@
 package ru.kirea.androidnotes.views.activities;
 
+import android.content.res.Configuration;
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import ru.kirea.androidnotes.R;
 import ru.kirea.androidnotes.views.fragments.NoteFragment;
-
-import android.content.res.Configuration;
-import android.os.Bundle;
 
 public class NoteActivity extends AppCompatActivity {
 
@@ -14,16 +14,18 @@ public class NoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
 
-        Bundle bundle = getIntent().getExtras();
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE || bundle == null) {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             finish();
             return ;
         }
 
+        NoteFragment fragment = new NoteFragment();
+        fragment.setArguments(getIntent().getExtras());
+
         if (savedInstanceState == null ) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.container_note_info_id, NoteFragment.newInstance(bundle.getLong(NoteFragment.KEY_NOTE_ID)))
+                    .replace(R.id.container_note_info_id, fragment)
                     .commit();
         }
     }

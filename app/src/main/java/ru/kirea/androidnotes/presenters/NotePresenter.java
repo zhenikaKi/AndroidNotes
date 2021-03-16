@@ -30,11 +30,6 @@ public class NotePresenter {
         return notesService.getNotes();
     }
 
-    //получить конкретную заметку
-    public Note getNote(long id) {
-        return notesService.findNote(id);
-    }
-
     //выбор заметки из общего списка
     public void noteSelected(long noteId) {
         if (isLandscape()) { //уведомляем фрагмент о том, что ему надо сбоку показать информацию по заметке

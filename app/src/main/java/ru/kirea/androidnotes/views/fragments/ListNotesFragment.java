@@ -1,5 +1,6 @@
 package ru.kirea.androidnotes.views.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,12 +20,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import ru.kirea.androidnotes.R;
 import ru.kirea.androidnotes.models.Note;
+import ru.kirea.androidnotes.models.NotePublisher;
 import ru.kirea.androidnotes.presenters.ListNotesAdapter;
+import ru.kirea.androidnotes.presenters.NoteObserver;
 import ru.kirea.androidnotes.presenters.NotePresenter;
 import ru.kirea.androidnotes.presenters.NoteView;
 
-public class ListNotesFragment extends Fragment implements NoteView {
+public class ListNotesFragment extends Fragment implements NoteView, NoteObserver {
 
+    private Context context;
     private NotePresenter notePresenter;
     private RecyclerView recyclerNotes;
 
@@ -36,12 +40,14 @@ public class ListNotesFragment extends Fragment implements NoteView {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        NotePublisher.getInstance().add(this);
         return inflater.inflate(R.layout.fragment_list_notes, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        context = getContext();
         recyclerNotes = view.findViewById(R.id.recycler_notes);
         showNotes();
     }
@@ -60,6 +66,11 @@ public class ListNotesFragment extends Fragment implements NoteView {
         fragmentTransaction.commit();
     }
 
+    @Override
+    public void updateNotes() {
+        showNotes();
+    }
+
     //показать список заметок
     private void showNotes() {
         List<Note> notes = notePresenter.getNotes();
@@ -76,8 +87,8 @@ public class ListNotesFragment extends Fragment implements NoteView {
         });
         recyclerNotes.setAdapter(adapter);
 
-        recyclerNotes.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerNotes.setLayoutManager(new LinearLayoutManager(context));
         recyclerNotes.setItemAnimator(new DefaultItemAnimator());
-        recyclerNotes.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+        recyclerNotes.addItemDecoration(new DividerItemDecoration(context, LinearLayoutManager.VERTICAL));
     }
 }
