@@ -5,7 +5,7 @@ import ru.kirea.androidnotes.R;
 
 import android.os.Bundle;
 
-public class ActivityMain extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
