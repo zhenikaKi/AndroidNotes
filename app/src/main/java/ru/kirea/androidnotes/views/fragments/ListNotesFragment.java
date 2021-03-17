@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import ru.kirea.androidnotes.R;
 import ru.kirea.androidnotes.models.Note;
+import ru.kirea.androidnotes.models.NoteClickable;
 import ru.kirea.androidnotes.models.NotePublisher;
 import ru.kirea.androidnotes.presenters.ListNotesAdapter;
 import ru.kirea.androidnotes.presenters.NoteObserver;
@@ -76,13 +77,10 @@ public class ListNotesFragment extends Fragment implements NoteView, NoteObserve
         List<Note> notes = notePresenter.getNotes();
 
         ListNotesAdapter adapter = new ListNotesAdapter(notes);
-        adapter.setOnClickListener(new View.OnClickListener() {
+        adapter.setNoteClickable(new NoteClickable() {
             @Override
-            public void onClick(View v) {
-                if (v.getTag(R.id.tag_item_id) != null) {
-                    long noteId = Long.parseLong(v.getTag(R.id.tag_item_id).toString());
-                    notePresenter.noteSelected(noteId);
-                }
+            public void noteClick(Note note) {
+                notePresenter.noteSelected(note.getId());
             }
         });
         recyclerNotes.setAdapter(adapter);

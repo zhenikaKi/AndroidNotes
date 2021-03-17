@@ -7,19 +7,15 @@ import android.widget.DatePicker;
 import android.widget.TimePicker;
 
 import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
-
-import ru.kirea.androidnotes.helpers.DateHelper;
 
 //класс по работе с окном выбора даты, времени
 public class DateTimeDialog {
     private Context context;
 
     //отдельно день, месяц, год, часы, минуты, секунды
-    private GregorianCalendar gregorianCalendar;
+    private Calendar calendar;
     private int dateDD, dateMM, dateYYYY;
-    private int timeHH, timeMM, timeSS;
+    private int timeHH, timeMM;
 
     private DateTimeListener dateTimeListener;
 
@@ -35,64 +31,37 @@ public class DateTimeDialog {
 
     //Установить дату
     private void setDate(long dateTime) {
-        if (dateTime == 0L) {
-            gregorianCalendar = new GregorianCalendar(TimeZone.getDefault());
-            dateDD = gregorianCalendar.get(Calendar.DAY_OF_MONTH);
-            dateMM = gregorianCalendar.get(Calendar.MONTH);
-            dateYYYY = gregorianCalendar.get(Calendar.YEAR);
-            timeHH = gregorianCalendar.get(Calendar.HOUR_OF_DAY);
-            timeMM = gregorianCalendar.get(Calendar.MINUTE);
-            timeSS = gregorianCalendar.get(Calendar.SECOND);
+        calendar = Calendar.getInstance();
+        if (dateTime != 0) {
+            calendar.setTimeInMillis(dateTime);
         }
-        else {
-            //получаем дату
-            String curDate = DateHelper.timestampToString(dateTime, DateHelper.DateFormat.DDMMYYYY_HHMMSS);
-            dateDD = Integer.valueOf(curDate.substring(0, 2));
-            dateMM = Integer.valueOf(curDate.substring(3, 5)) - 1;
-            dateYYYY = Integer.valueOf(curDate.substring(6, 10));
-            timeHH = Integer.valueOf(curDate.substring(11, 13));
-            timeMM = Integer.valueOf(curDate.substring(14, 16));
-            timeSS = Integer.valueOf(curDate.substring(17, 19));
-            //задаем дату
-            gregorianCalendar = new GregorianCalendar(dateYYYY,
-                    dateMM,
-                    dateDD,
-                    timeHH,
-                    timeMM,
-                    timeSS);
-        }
+        dateDD = calendar.get(Calendar.DAY_OF_MONTH);
+        dateMM = calendar.get(Calendar.MONTH);
+        dateYYYY = calendar.get(Calendar.YEAR);
+        timeHH = calendar.get(Calendar.HOUR_OF_DAY);
+        timeMM = calendar.get(Calendar.MINUTE);
     }
 
     //Показать окно выбора даты
     public void showDate() {
-        new DatePickerDialog(context, dateSetListener,
-                gregorianCalendar.get(Calendar.YEAR),
-                gregorianCalendar.get(Calendar.MONTH),
-                gregorianCalendar.get(Calendar.DAY_OF_MONTH))
-                .show();
+        new DatePickerDialog(context, dateSetListener, dateYYYY, dateMM, dateDD).show();
     }
 
     //Показзать окно выбора времени
     public void showTime() {
-        new TimePickerDialog(context, timeSetListener,
-                gregorianCalendar.get(Calendar.HOUR_OF_DAY),
-                gregorianCalendar.get(Calendar.MINUTE),
-                true).show();
+        new TimePickerDialog(context, timeSetListener, timeHH, timeMM, true).show();
     }
 
     //Обработка выбора даты
     private DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            gregorianCalendar.set(Calendar.YEAR, year);
-            gregorianCalendar.set(Calendar.MONTH, monthOfYear);
-            gregorianCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            gregorianCalendar.set(Calendar.HOUR_OF_DAY, timeHH);
-            gregorianCalendar.set(Calendar.MINUTE, timeMM);
-            gregorianCalendar.set(Calendar.SECOND, timeSS);
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, monthOfYear);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
             if (dateTimeListener != null)
-                dateTimeListener.selectedDateTime(gregorianCalendar.getTimeInMillis());
+                dateTimeListener.selectedDateTime(calendar.getTimeInMillis());
         }
     };
 
@@ -100,15 +69,11 @@ public class DateTimeDialog {
     private TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            gregorianCalendar.set(Calendar.YEAR, dateYYYY);
-            gregorianCalendar.set(Calendar.MONTH, dateMM);
-            gregorianCalendar.set(Calendar.DAY_OF_MONTH, dateDD);
-            gregorianCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-            gregorianCalendar.set(Calendar.MINUTE, minute);
-            gregorianCalendar.set(Calendar.SECOND, timeSS);
+            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            calendar.set(Calendar.MINUTE, minute);
 
             if (dateTimeListener != null)
-                dateTimeListener.selectedDateTime(gregorianCalendar.getTimeInMillis());
+                dateTimeListener.selectedDateTime(calendar.getTimeInMillis());
         }
     };
 

@@ -3,16 +3,17 @@ package ru.kirea.androidnotes.views.viewholders;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import ru.kirea.androidnotes.R;
+import ru.kirea.androidnotes.models.ItemAdapterClickable;
 
 public class ItemNoteViewHolder extends RecyclerView.ViewHolder {
     private TextView title;
     private TextView description;
     private TextView crete;
     private TextView update;
-    private ConstraintLayout item;
+
+    private ItemAdapterClickable itemAdapterClickable;
 
     public ItemNoteViewHolder(View itemView) {
         super(itemView);
@@ -20,7 +21,16 @@ public class ItemNoteViewHolder extends RecyclerView.ViewHolder {
         description = itemView.findViewById(R.id.note_description_id);
         crete = itemView.findViewById(R.id.note_create_id);
         update = itemView.findViewById(R.id.note_update_id);
-        item = itemView.findViewById(R.id.note_item_id);
+
+        //обработка нажатия по элементу списка
+        itemView.findViewById(R.id.note_item_id).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (itemAdapterClickable != null) {
+                    itemAdapterClickable.itemClick(getAdapterPosition());
+                }
+            }
+        });
     }
 
     public TextView getTitle() {
@@ -39,7 +49,7 @@ public class ItemNoteViewHolder extends RecyclerView.ViewHolder {
         return update;
     }
 
-    public ConstraintLayout getItem() {
-        return item;
+    public void setItemAdapterClickable(ItemAdapterClickable itemAdapterClickable) {
+        this.itemAdapterClickable = itemAdapterClickable;
     }
 }

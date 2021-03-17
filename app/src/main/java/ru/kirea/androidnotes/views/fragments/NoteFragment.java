@@ -33,6 +33,7 @@ public class NoteFragment extends Fragment implements NoteEditView {
     private TextView updateDate;
 
     private long noteId;
+    private long createDate;
     private NoteEditPresenter noteEditPresenter;
     
     public static NoteFragment newInstance(long noteId) {
@@ -80,7 +81,7 @@ public class NoteFragment extends Fragment implements NoteEditView {
         editCreateDate.setText(date);
         date = DateHelper.timestampToString(create, DateHelper.DateFormat.HHMM);
         editCreateTime.setText(date);
-        editCreateDate.setTag(R.id.tag_datetime_id, create);
+        createDate = create;
     }
 
     @Override
@@ -107,11 +108,9 @@ public class NoteFragment extends Fragment implements NoteEditView {
         public void onClick(View v) {
             int id = v.getId();
             if (id == R.id.edit_date_id) { //поле выбора даты создания
-                long dateTime = v.getTag(R.id.tag_datetime_id) == null ? 0 : Long.parseLong(v.getTag(R.id.tag_datetime_id).toString());
-                noteEditPresenter.createDateClicked(dateTime);
+                noteEditPresenter.createDateClicked(createDate);
             } else if (id == R.id.edit_time_id) { //поле выбора времени создания
-                long dateTime = v.getTag(R.id.tag_datetime_id) == null ? 0 : Long.parseLong(v.getTag(R.id.tag_datetime_id).toString());
-                noteEditPresenter.createTimeClicked(dateTime);
+                noteEditPresenter.createTimeClicked(createDate);
             } else if (id == R.id.button_save_id) { //кнопка сохранения
                 String title = editTitle.getText().toString();
                 if (title.isEmpty()) {
@@ -125,7 +124,6 @@ public class NoteFragment extends Fragment implements NoteEditView {
                     return;
                 }
 
-                long createDate = editCreateDate.getTag(R.id.tag_datetime_id) == null ? 0 : Long.parseLong(editCreateDate.getTag(R.id.tag_datetime_id).toString());
                 if (createDate == 0) {
                     inputCreateDate.setError(getString(R.string.create_null));
                     return;

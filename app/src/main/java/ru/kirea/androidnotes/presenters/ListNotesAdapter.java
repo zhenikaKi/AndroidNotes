@@ -10,13 +10,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import ru.kirea.androidnotes.R;
 import ru.kirea.androidnotes.helpers.DateHelper;
+import ru.kirea.androidnotes.models.ItemAdapterClickable;
 import ru.kirea.androidnotes.models.Note;
+import ru.kirea.androidnotes.models.NoteClickable;
 import ru.kirea.androidnotes.views.viewholders.ItemNoteViewHolder;
 
 public class ListNotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 	private List<Note> items;
-	private View.OnClickListener onClickListener;
+	private NoteClickable noteClickable;
 
 	public ListNotesAdapter(List<Note> items) {
 		this.items = items;
@@ -47,14 +49,18 @@ public class ListNotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 		date = note.getUpdateDate() == null ? "" : DateHelper.timestampToString(note.getUpdateDate(), DateHelper.DateFormat.DDMMYYYY_HHMM);
 		noteViewHolder.getUpdate().setText(date);
 
-		//обработка нажатия по элементу
-		if (onClickListener != null) {
-			noteViewHolder.getItem().setTag(R.id.tag_item_id, note.getId());
-			noteViewHolder.getItem().setOnClickListener(onClickListener);
+		//обработчик нажатия по элементу
+		if (noteClickable != null) {
+			noteViewHolder.setItemAdapterClickable(new ItemAdapterClickable() {
+				@Override
+				public void itemClick(int position) {
+					noteClickable.noteClick(items.get(position));
+				}
+			});
 		}
 	}
 
-	public void setOnClickListener(View.OnClickListener onClickListener) {
-		this.onClickListener = onClickListener;
+	public void setNoteClickable(NoteClickable noteClickable) {
+		this.noteClickable = noteClickable;
 	}
 }
