@@ -3,12 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.activities.MainActivity">
+    tools:context=".views.fragments.ListNotesFragment">
 
-    <fragment
-        android:id="@+id/notes_id"
-        android:name="ru.kirea.androidnotes.views.fragments.ListNotesFragment"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_notes"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:scrollbars="vertical">
+    </androidx.recyclerview.widget.RecyclerView>
 
 </FrameLayout>

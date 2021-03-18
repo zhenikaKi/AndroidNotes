@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DateHelper {
-    public enum DateFormat {DDMMYYYY, DDMMYYYY_HHMM, DDMMYYYY_HHMMSS}
+    public enum DateFormat {DDMMYYYY, DDMMYYYY_HHMM, DDMMYYYY_HHMMSS, HHMM}
 
     //перевести timestamp в читаемую дату
     public static String timestampToString(Long millis, DateFormat dateFormat) {
@@ -18,7 +18,9 @@ public class DateHelper {
             patter = "dd.MM.yyyy HH:mm";
         } else if (dateFormat == DateFormat.DDMMYYYY_HHMMSS) {
             patter = "dd.MM.yyyy HH:mm:ss";
-        } else {
+        } else if (dateFormat == DateFormat.HHMM) {
+            patter = "HH:mm";
+        }else {
             patter = "dd.MM.yyyy";
         }
 
