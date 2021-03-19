@@ -1,7 +1,6 @@
 package ru.kirea.androidnotes.views.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +36,10 @@ public class ListNotesFragment extends Fragment implements NoteView, NoteObserve
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         notePresenter = new NotePresenter(getContext(), this);
+
+        if (notePresenter.isLandscape()) {
+            requireActivity().getSupportFragmentManager().popBackStack();
+        }
     }
 
     @Override
@@ -54,16 +57,32 @@ public class ListNotesFragment extends Fragment implements NoteView, NoteObserve
     }
 
     @Override
-    public void runActivity(Intent intent) {
-        startActivity(intent);
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        notePresenter.saveInstanceState(outState);
+        super .onSaveInstanceState(outState);
     }
 
     @Override
-    public void updateFragment(Fragment fragment) {
+    public void onActivityCreated(Bundle savedInstanceState) {
+        notePresenter.restoreInstanceState(savedInstanceState);
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void showFragmentInMain(Fragment fragment) {
         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.container_note_info_id, fragment); // замена фрагмента
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        fragmentTransaction.replace(R.id.container_tab_main_id, fragment); // замена фрагмента
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void showFragmentInLandscape(Fragment fragment) {
+        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.container_tab_main_info_id, fragment); // замена фрагмента
         fragmentTransaction.commit();
     }
 

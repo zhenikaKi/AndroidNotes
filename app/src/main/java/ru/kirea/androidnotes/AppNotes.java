@@ -1,6 +1,7 @@
 package ru.kirea.androidnotes;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.room.Room;
 import ru.kirea.androidnotes.db.AppDataBase;
@@ -28,5 +29,9 @@ public class AppNotes extends Application {
 
     public AppDataBase getDatabase() {
         return database;
+    }
+
+    public static void inLog(String text) {
+        Log.d("My", text);
     }
 }

@@ -6,18 +6,17 @@
     android:orientation="horizontal"
     tools:context=".views.activities.MainActivity">
 
-    <fragment
-        android:id="@+id/notes_id"
-        android:name="ru.kirea.androidnotes.views.fragments.ListNotesFragment"
+    <!-- список заметок -->
+    <FrameLayout
+        android:id="@+id/container_tab_main_id"
         android:layout_width="@dimen/zero_size"
         android:layout_height="match_parent"
         android:layout_weight="1"/>
 
     <!-- информация по заметке -->
     <FrameLayout
-        android:id="@+id/container_note_info_id"
+        android:id="@+id/container_tab_main_info_id"
         android:layout_width="@dimen/zero_size"
         android:layout_height="match_parent"
         android:layout_weight="1"/>
-
 </LinearLayout>
