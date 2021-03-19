@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import ru.kirea.androidnotes.R;
 import ru.kirea.androidnotes.helpers.DateHelper;
 import ru.kirea.androidnotes.models.ItemAdapterClickable;
-import ru.kirea.androidnotes.models.Note;
+import ru.kirea.androidnotes.db.models.Note;
 import ru.kirea.androidnotes.models.NoteClickable;
 import ru.kirea.androidnotes.views.viewholders.ItemNoteViewHolder;
 

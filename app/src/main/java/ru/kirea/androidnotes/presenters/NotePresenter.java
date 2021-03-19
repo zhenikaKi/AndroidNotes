@@ -6,8 +6,9 @@ import android.content.res.Configuration;
 
 import java.util.List;
 
+import ru.kirea.androidnotes.models.BDNoteServiceImpl;
 import ru.kirea.androidnotes.models.LocalNotesServiceImpl;
-import ru.kirea.androidnotes.models.Note;
+import ru.kirea.androidnotes.db.models.Note;
 import ru.kirea.androidnotes.models.NotesService;
 import ru.kirea.androidnotes.views.activities.NoteActivity;
 import ru.kirea.androidnotes.views.fragments.NoteFragment;
@@ -20,7 +21,8 @@ public class NotePresenter {
     public NotePresenter(Context context, NoteView noteView) {
         this.context = context;
         this.noteView = noteView;
-        notesService = new LocalNotesServiceImpl(); //подключаемся к локальному хранилищу заметок
+        //notesService = new LocalNotesServiceImpl(); //подключаемся к локальному хранилищу заметок
+        notesService = new BDNoteServiceImpl(); //подключаемся к хранилищу заметок в базе
 
         notesService.init();
     }

@@ -3,6 +3,7 @@
     package="ru.kirea.androidnotes">
 
     <application
+        android:name=".AppNotes"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

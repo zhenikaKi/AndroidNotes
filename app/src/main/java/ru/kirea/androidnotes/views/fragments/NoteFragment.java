@@ -15,7 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import ru.kirea.androidnotes.R;
 import ru.kirea.androidnotes.helpers.DateHelper;
-import ru.kirea.androidnotes.models.Note;
+import ru.kirea.androidnotes.db.models.Note;
 import ru.kirea.androidnotes.models.NotePublisher;
 import ru.kirea.androidnotes.presenters.NoteEditPresenter;
 import ru.kirea.androidnotes.presenters.NoteEditView;

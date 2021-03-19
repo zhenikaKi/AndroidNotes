@@ -2,6 +2,8 @@ package ru.kirea.androidnotes.models;
 
 import java.util.List;
 
+import ru.kirea.androidnotes.db.models.Note;
+
 public interface NotesService {
     //инициализация
     void init();

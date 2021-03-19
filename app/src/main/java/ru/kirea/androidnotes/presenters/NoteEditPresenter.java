@@ -2,8 +2,9 @@ package ru.kirea.androidnotes.presenters;
 
 import android.content.Context;
 
+import ru.kirea.androidnotes.models.BDNoteServiceImpl;
 import ru.kirea.androidnotes.models.LocalNotesServiceImpl;
-import ru.kirea.androidnotes.models.Note;
+import ru.kirea.androidnotes.db.models.Note;
 import ru.kirea.androidnotes.models.NotesService;
 
 public class NoteEditPresenter {
@@ -14,7 +15,8 @@ public class NoteEditPresenter {
     public NoteEditPresenter(Context context, NoteEditView noteEditView) {
         this.context = context;
         this.noteEditView = noteEditView;
-        notesService = new LocalNotesServiceImpl(); //подключаемся к локальному хранилищу заметок
+        //notesService = new LocalNotesServiceImpl(); //подключаемся к локальному хранилищу заметок
+        notesService = new BDNoteServiceImpl(); //подключаемся к хранилищу заметок в базе
 
         notesService.init();
     }

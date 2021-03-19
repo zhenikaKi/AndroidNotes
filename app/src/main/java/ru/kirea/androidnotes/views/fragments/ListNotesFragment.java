@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import ru.kirea.androidnotes.R;
-import ru.kirea.androidnotes.models.Note;
+import ru.kirea.androidnotes.db.models.Note;
 import ru.kirea.androidnotes.models.NoteClickable;
 import ru.kirea.androidnotes.models.NotePublisher;
 import ru.kirea.androidnotes.presenters.ListNotesAdapter;
