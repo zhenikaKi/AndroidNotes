@@ -11,6 +11,4 @@ public class DBConsts {
     public static final String NOTE_DESCRIPTION = "description";
     public static final String NOTE_CREATE_DATE = "create_date";
     public static final String NOTE_UPDATE_DATE = "update_date";
-
-
 }

@@ -12,7 +12,9 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import ru.kirea.androidnotes.AppNotes;
 import ru.kirea.androidnotes.R;
 import ru.kirea.androidnotes.db.models.Note;
 import ru.kirea.androidnotes.helpers.DateHelper;
@@ -46,6 +48,7 @@ public class NoteFragment extends Fragment implements NoteEditView {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        AppNotes.inLog("NoteFragment.onCreate savedInstanceState = " + (savedInstanceState == null ? "null" : savedInstanceState.toString()));
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             noteId = getArguments().getLong(KEY_NOTE_ID);
@@ -55,12 +58,20 @@ public class NoteFragment extends Fragment implements NoteEditView {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        AppNotes.inLog("NoteFragment.onCreate savedInstanceState = " + (savedInstanceState == null ? "null" : savedInstanceState.toString()));
         return inflater.inflate(R.layout.fragment_note, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        AppNotes.inLog("NoteFragment.onViewCreated savedInstanceState = " + (savedInstanceState == null ? "null" : savedInstanceState.toString()));
         super.onViewCreated(view, savedInstanceState);
+
+        if (!noteEditPresenter.isLandscape()) {
+            Toolbar toolbar = requireActivity().findViewById(R.id.toolbar_id);
+            toolbar.setTitle(getString(R.string.note_title));
+        }
+
         inputTitle = view.findViewById(R.id.input_title_id);
         inputDescription = view.findViewById(R.id.input_description_id);
         inputCreateDate = view.findViewById(R.id.input_date_id);
@@ -77,6 +88,7 @@ public class NoteFragment extends Fragment implements NoteEditView {
     //показать дату и время создания заметки
     @Override
     public void showCreateDateTime(long create) {
+        AppNotes.inLog("NoteFragment.showCreateDateTime");
         String date = DateHelper.timestampToString(create, DateHelper.DateFormat.DDMMYYYY);
         editCreateDate.setText(date);
         date = DateHelper.timestampToString(create, DateHelper.DateFormat.HHMM);
@@ -86,14 +98,13 @@ public class NoteFragment extends Fragment implements NoteEditView {
 
     @Override
     public void saved() {
+        AppNotes.inLog("NoteFragment.saved");
         //информируем слушателей о том, что нужно обновить список заметок
         NotePublisher.getInstance().sendChange();
 
-        if (getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
-            if (getActivity() != null) {
-                getActivity().finish();
-            }
-        }
+        /*if (getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
+            requireActivity().getSupportFragmentManager().popBackStack();
+        }*/
     }
 
     private void initClicked(View view) {
@@ -136,11 +147,15 @@ public class NoteFragment extends Fragment implements NoteEditView {
 
     //показать данные по заметке
     private void showNote() {
-        Note note = noteEditPresenter.getNote(noteId);
-        editTitle.setText(note.getTitle());
-        editDescription.setText(note.getDescription());
-        showCreateDateTime(note.getCreateDate());
-        String date = note.getUpdateDate() == null ? "" : DateHelper.timestampToString(note.getUpdateDate(), DateHelper.DateFormat.DDMMYYYY_HHMM);
-        updateDate.setText(date);
+        if (noteId != 0) {
+            Note note = noteEditPresenter.getNote(noteId);
+            editTitle.setText(note.getTitle());
+            editDescription.setText(note.getDescription());
+            showCreateDateTime(note.getCreateDate());
+            String date = note.getUpdateDate() == null ? "" : DateHelper.timestampToString(note.getUpdateDate(), DateHelper.DateFormat.DDMMYYYY_HHMM);
+            updateDate.setText(date);
+        } else { //дата создания заметки - текущая для новых заметок
+            showCreateDateTime(System.currentTimeMillis());
+        }
     }
 }

@@ -45,7 +45,9 @@ public class Note {
         this.title = title;
         this.description = description;
         this.createDate = createDate;
-        updateDate = System.currentTimeMillis();
+        if (id != 0) {
+            updateDate = System.currentTimeMillis();
+        }
     }
 
     public long getId() {

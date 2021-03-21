@@ -1,7 +1,9 @@
 package ru.kirea.androidnotes.presenters;
 
 import android.content.Context;
+import android.content.res.Configuration;
 
+import ru.kirea.androidnotes.AppNotes;
 import ru.kirea.androidnotes.models.BDNoteServiceImpl;
 import ru.kirea.androidnotes.models.LocalNotesServiceImpl;
 import ru.kirea.androidnotes.db.models.Note;
@@ -13,6 +15,7 @@ public class NoteEditPresenter {
     private NotesService notesService;
 
     public NoteEditPresenter(Context context, NoteEditView noteEditView) {
+        AppNotes.inLog("NoteEditPresenter");
         this.context = context;
         this.noteEditView = noteEditView;
         //notesService = new LocalNotesServiceImpl(); //подключаемся к локальному хранилищу заметок
@@ -23,6 +26,7 @@ public class NoteEditPresenter {
 
     //получить конкретную заметку
     public Note getNote(long id) {
+        AppNotes.inLog("NoteEditPresenter.getNote");
         return notesService.findNote(id);
     }
 
@@ -37,6 +41,7 @@ public class NoteEditPresenter {
     }
 
     private void showDateTimeDialog(long dateTime, boolean date) {
+        AppNotes.inLog("NoteEditPresenter.showDateTimeDialog");
         DateTimeDialog dateTimeDialog = new DateTimeDialog(context, dateTime);
         dateTimeDialog.setDateTimeListener(new DateTimeDialog.DateTimeListener() {
             @Override
@@ -53,8 +58,14 @@ public class NoteEditPresenter {
     }
 
     public void save(long id, String title, String description, long createDate) {
+        AppNotes.inLog("NoteEditPresenter.save");
         Note note = new Note(id, title, description, createDate);
         notesService.saveNote(note);
         noteEditView.saved();
+    }
+
+    //проверить альбомная ли сейчас ориентация
+    public boolean isLandscape() {
+        return context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 }
