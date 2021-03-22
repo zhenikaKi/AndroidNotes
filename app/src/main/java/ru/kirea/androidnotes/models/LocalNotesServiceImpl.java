@@ -8,8 +8,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
+import ru.kirea.androidnotes.db.models.Note;
+
 //локальное хранилище заметок
 public class LocalNotesServiceImpl implements NotesService {
+    public static long incrementId = 1; //для автоматического заполнения id'шника заметки
     private static List<Note> notes = new ArrayList<>();
 
     @Override

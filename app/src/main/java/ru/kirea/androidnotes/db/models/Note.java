@@ -1,20 +1,42 @@
-package ru.kirea.androidnotes.models;
+package ru.kirea.androidnotes.db.models;
 
-import ru.kirea.androidnotes.helpers.DateHelper;
+import androidx.annotation.Nullable;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
+import ru.kirea.androidnotes.db.DBConsts;
+import ru.kirea.androidnotes.models.LocalNotesServiceImpl;
 
+@Entity(tableName = DBConsts.TABLE_NOTES,
+        indices = {
+                @Index(DBConsts.NOTE_ID),
+                @Index(DBConsts.NOTE_TITLE)
+        })
 public class Note {
-    private static long incrementId = 1; //для автоматического заполнения id'шника заметки
-
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = DBConsts.NOTE_ID)
     private long id;
+
+    @ColumnInfo(name = DBConsts.NOTE_TITLE)
     private String title;
+
+    @ColumnInfo(name = DBConsts.NOTE_DESCRIPTION)
     private String description;
+
+    @ColumnInfo(name = DBConsts.NOTE_CREATE_DATE)
     private long createDate;
+
+    @ColumnInfo(name = DBConsts.NOTE_UPDATE_DATE)
+    @Nullable
     private Long updateDate;
 
+    @Ignore
     public Note(String title, String description) {
         this.title = title;
         this.description = description;
-        id = incrementId++;
+        id = LocalNotesServiceImpl.incrementId++;
         createDate = System.currentTimeMillis();
     }
 
@@ -23,15 +45,25 @@ public class Note {
         this.title = title;
         this.description = description;
         this.createDate = createDate;
-        updateDate = System.currentTimeMillis();
+        if (id != 0) {
+            updateDate = System.currentTimeMillis();
+        }
     }
 
     public long getId() {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public Long getUpdateDate() {
         return updateDate;
+    }
+
+    public void setUpdateDate(@Nullable Long updateDate) {
+        this.updateDate = updateDate;
     }
 
     public String getTitle() {
