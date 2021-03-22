@@ -1,12 +1,15 @@
 package ru.kirea.androidnotes.presenters;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import java.util.List;
 
-import ru.kirea.androidnotes.AppNotes;
+import ru.kirea.androidnotes.R;
 import ru.kirea.androidnotes.db.models.Note;
 import ru.kirea.androidnotes.models.BDNoteServiceImpl;
 import ru.kirea.androidnotes.models.NotesService;
@@ -22,7 +25,6 @@ public class NotePresenter {
     private Long selectedNoteId;
 
     public NotePresenter(Context context, NoteView noteView) {
-        AppNotes.inLog("NotePresenter");
         this.context = context;
         this.noteView = noteView;
         //notesService = new LocalNotesServiceImpl(); //подключаемся к локальному хранилищу заметок
@@ -33,13 +35,11 @@ public class NotePresenter {
 
     //получить список заметок
     public List<Note> getNotes() {
-        AppNotes.inLog("NotePresenter.getNote");
         return notesService.getNotes();
     }
 
     //выбор заметки из общего списка
     public void noteSelected(long noteId) {
-        AppNotes.inLog("NotePresenter.noteSelected");
         selectedNoteId = noteId;
         if (isLandscape()) { //уведомляем фрагмент о том, что ему надо сбоку показать информацию по заметке
             noteView.showFragmentInLandscape(NoteFragment.newInstance(noteId));
@@ -55,7 +55,6 @@ public class NotePresenter {
 
     //сохранить настройки
     public void saveInstanceState(Bundle outState) {
-        AppNotes.inLog("NotePresenter.saveInstanceState outState = " + (outState == null ? "null" : outState.toString()));
         if (selectedNoteId != null) {
             outState.putLong(KEY_SELECTED_NOTE_ID, selectedNoteId);
         }
@@ -63,18 +62,31 @@ public class NotePresenter {
 
     //загрузить настройки
     public void restoreInstanceState(Bundle savedInstanceState) {
-        AppNotes.inLog("NotePresenter.restoreInstanceState savedInstanceState = " + (savedInstanceState == null ? "null" : savedInstanceState.toString()));
         if (savedInstanceState != null) {
             long savedNoteId = savedInstanceState.getLong(KEY_SELECTED_NOTE_ID, 0);
-            /*if (savedNoteId > 0) {
+            if (savedNoteId > 0) {
                 noteSelected(savedNoteId);
-            }*/
+            }
         }
     }
 
     //добавление новой заметки
     public void addNote() {
-        AppNotes.inLog("NotePresenter.addNote");
         noteSelected(0);
+    }
+
+    //скопировать текст заметки
+    public void copyText(Note note) {
+        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("", note.getDescription());
+        if (clipboard != null) {
+            clipboard.setPrimaryClip(clip);
+            Toast.makeText(context, context.getResources().getString(R.string.text_copied), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    //удалить заметку
+    public void delete(Note note) {
+        notesService.deleteNote(note);
     }
 }

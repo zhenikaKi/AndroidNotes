@@ -1,5 +1,6 @@
 package ru.kirea.androidnotes.views.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,7 +14,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -22,7 +23,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import ru.kirea.androidnotes.AppNotes;
 import ru.kirea.androidnotes.R;
 import ru.kirea.androidnotes.db.models.Note;
 import ru.kirea.androidnotes.models.NoteClickable;
@@ -40,13 +40,12 @@ public class ListNotesFragment extends Fragment implements NoteView, NoteObserve
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        AppNotes.inLog("ListNotesFragment.onCreate savedInstanceState = " + (savedInstanceState == null ? "null" : savedInstanceState.toString()));
         super.onCreate(savedInstanceState);
         notePresenter = new NotePresenter(getContext(), this);
 
-        /*if (notePresenter.isLandscape()) {
+        if (notePresenter.isLandscape()) {
             requireActivity().getSupportFragmentManager().popBackStack();
-        }*/
+        }
 
         //создаем меню сверху
         setHasOptionsMenu(true);
@@ -54,42 +53,36 @@ public class ListNotesFragment extends Fragment implements NoteView, NoteObserve
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        AppNotes.inLog("ListNotesFragment.onCreateView savedInstanceState = " + (savedInstanceState == null ? "null" : savedInstanceState.toString()));
         NotePublisher.getInstance().add(this);
         return inflater.inflate(R.layout.fragment_list_notes, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        AppNotes.inLog("ListNotesFragment.onViewCreated savedInstanceState = " + (savedInstanceState == null ? "null" : savedInstanceState.toString()));
         super.onViewCreated(view, savedInstanceState);
         context = getContext();
         recyclerNotes = view.findViewById(R.id.recycler_notes);
 
         Toolbar toolbar = requireActivity().findViewById(R.id.toolbar_id);
         toolbar.setTitle(getString(R.string.menu_notes));
-        //((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
 
         showNotes();
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        AppNotes.inLog("ListNotesFragment.onSaveInstanceState outState = " + outState.toString());
         notePresenter.saveInstanceState(outState);
         super .onSaveInstanceState(outState);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        AppNotes.inLog("ListNotesFragment.onActivityCreated savedInstanceState = " + (savedInstanceState == null ? "null" : savedInstanceState.toString()));
         notePresenter.restoreInstanceState(savedInstanceState);
         super.onActivityCreated(savedInstanceState);
     }
 
     @Override
     public void showFragmentInMain(Fragment fragment) {
-        AppNotes.inLog("ListNotesFragment.showFragmentInMain");
         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.container_main_id, fragment); // замена фрагмента
@@ -99,8 +92,7 @@ public class ListNotesFragment extends Fragment implements NoteView, NoteObserve
 
     @Override
     public void showFragmentInLandscape(Fragment fragment) {
-        AppNotes.inLog("ListNotesFragment.showFragmentInLandscape");
-        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+        FragmentManager fragmentManager = getChildFragmentManager();
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.container_tab_main_info_id, fragment); // замена фрагмента
@@ -109,20 +101,17 @@ public class ListNotesFragment extends Fragment implements NoteView, NoteObserve
 
     @Override
     public void updateNotes() {
-        AppNotes.inLog("ListNotesFragment.updateNotes");
         showNotes();
     }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        AppNotes.inLog("ListNotesFragment.onCreateOptionsMenu");
         inflater.inflate(R.menu.menu_fragment_list_nites, menu);
     }
 
     //обработка меню
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        AppNotes.inLog("ListNotesFragment.onOptionsItemSelected");
         int id = item.getItemId();
         if (id == R.id.menu_add_id) { //добавление новой заметки
             notePresenter.addNote();
@@ -140,6 +129,29 @@ public class ListNotesFragment extends Fragment implements NoteView, NoteObserve
             @Override
             public void noteClick(Note note) {
                 notePresenter.noteSelected(note.getId());
+            }
+
+            @Override
+            public void noteMenuClick(View view, final Note note) {
+                Activity activity = requireActivity();
+                PopupMenu popupMenu = new PopupMenu(activity, view);
+                activity.getMenuInflater().inflate(R.menu.popup_menu_note, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        int id = item.getItemId();
+                        switch (id) {
+                            case R.id.menu_copy_id: //скопировать текст
+                                notePresenter.copyText(note);
+                                break;
+                            case R.id.menu_delete_id: //удалить заметку
+                                notePresenter.delete(note);
+                                showNotes();
+                        }
+                        return true;
+                    }
+                });
+                popupMenu.show();
             }
         });
         recyclerNotes.setAdapter(adapter);

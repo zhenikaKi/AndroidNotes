@@ -15,7 +15,7 @@ public class ItemNoteViewHolder extends RecyclerView.ViewHolder {
 
     private ItemAdapterClickable itemAdapterClickable;
 
-    public ItemNoteViewHolder(View itemView) {
+    public ItemNoteViewHolder(final View itemView) {
         super(itemView);
         title = itemView.findViewById(R.id.note_title_id);
         description = itemView.findViewById(R.id.note_description_id);
@@ -28,6 +28,16 @@ public class ItemNoteViewHolder extends RecyclerView.ViewHolder {
             public void onClick(View v) {
                 if (itemAdapterClickable != null) {
                     itemAdapterClickable.itemClick(getAdapterPosition());
+                }
+            }
+        });
+
+        //обработка нажатия по менюшке
+        itemView.findViewById(R.id.note_menu_id).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (itemAdapterClickable != null) {
+                    itemAdapterClickable.itemMenuClick(v, getAdapterPosition());
                 }
             }
         });

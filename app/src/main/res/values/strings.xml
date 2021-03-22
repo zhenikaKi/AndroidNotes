@@ -12,12 +12,15 @@
     <string name="title_null">Пустое название</string>
     <string name="description_null">Пустое описание</string>
     <string name="create_null">Пустая дата или время</string>
+    <string name="text_copied">Текст скопирован</string>
 
     <!-- меню -->
     <string name="menu_add">Добавить заметку</string>
     <string name="menu_notes">Заметки</string>
     <string name="menu_settings">Настройки</string>
     <string name="menu_about">О приложении</string>
+    <string name="menu_copy">Скопировать текст</string>
+    <string name="menu_delete">Удалить заметку</string>
 
     <!-- о приложении -->
     <string name="about_title">Заметки v.%1$s</string>

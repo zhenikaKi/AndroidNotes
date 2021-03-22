@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import ru.kirea.androidnotes.AppNotes;
 import ru.kirea.androidnotes.R;
 import ru.kirea.androidnotes.views.fragments.TabMainFragment;
 
@@ -14,7 +13,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        AppNotes.inLog("MainActivity.onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

@@ -10,4 +10,5 @@
     <dimen name="about_title_size">20sp</dimen>
     <dimen name="about_description_size">18sp</dimen>
     <dimen name="item_padding_author">20dp</dimen>
+    <dimen name="menu_height">30dp</dimen>
 </resources>

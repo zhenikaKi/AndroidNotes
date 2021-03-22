@@ -36,11 +36,6 @@ public class AppNotes extends Application {
                     stringBuilder.append("\n").append(element.toString());
 
                 Log.e(LOG_TAG, stringBuilder.toString());
-
-                /*Thread.UncaughtExceptionHandler exceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
-                if (exceptionHandler!= null) {
-                    exceptionHandler.uncaughtException(t, e);
-                }*/
             }
         });
     }

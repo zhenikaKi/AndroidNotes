@@ -56,8 +56,14 @@ public class ListNotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 				public void itemClick(int position) {
 					noteClickable.noteClick(items.get(position));
 				}
+
+				@Override
+				public void itemMenuClick(View view, int position) {
+					noteClickable.noteMenuClick(view, items.get(position));
+				}
 			});
 		}
+
 	}
 
 	public void setNoteClickable(NoteClickable noteClickable) {

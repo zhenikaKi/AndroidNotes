@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import ru.kirea.androidnotes.AppNotes;
 import ru.kirea.androidnotes.R;
 import ru.kirea.androidnotes.db.models.Note;
 import ru.kirea.androidnotes.helpers.DateHelper;
@@ -48,7 +47,6 @@ public class NoteFragment extends Fragment implements NoteEditView {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        AppNotes.inLog("NoteFragment.onCreate savedInstanceState = " + (savedInstanceState == null ? "null" : savedInstanceState.toString()));
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             noteId = getArguments().getLong(KEY_NOTE_ID);
@@ -58,13 +56,11 @@ public class NoteFragment extends Fragment implements NoteEditView {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        AppNotes.inLog("NoteFragment.onCreate savedInstanceState = " + (savedInstanceState == null ? "null" : savedInstanceState.toString()));
         return inflater.inflate(R.layout.fragment_note, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        AppNotes.inLog("NoteFragment.onViewCreated savedInstanceState = " + (savedInstanceState == null ? "null" : savedInstanceState.toString()));
         super.onViewCreated(view, savedInstanceState);
 
         if (!noteEditPresenter.isLandscape()) {
@@ -88,7 +84,6 @@ public class NoteFragment extends Fragment implements NoteEditView {
     //показать дату и время создания заметки
     @Override
     public void showCreateDateTime(long create) {
-        AppNotes.inLog("NoteFragment.showCreateDateTime");
         String date = DateHelper.timestampToString(create, DateHelper.DateFormat.DDMMYYYY);
         editCreateDate.setText(date);
         date = DateHelper.timestampToString(create, DateHelper.DateFormat.HHMM);
@@ -98,13 +93,12 @@ public class NoteFragment extends Fragment implements NoteEditView {
 
     @Override
     public void saved() {
-        AppNotes.inLog("NoteFragment.saved");
         //информируем слушателей о том, что нужно обновить список заметок
         NotePublisher.getInstance().sendChange();
 
-        /*if (getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
+        if (getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
             requireActivity().getSupportFragmentManager().popBackStack();
-        }*/
+        }
     }
 
     private void initClicked(View view) {
