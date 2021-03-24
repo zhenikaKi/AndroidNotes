@@ -9,33 +9,52 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 import ru.kirea.androidnotes.R;
 import ru.kirea.androidnotes.db.models.Note;
 import ru.kirea.androidnotes.models.BDNoteServiceImpl;
 import ru.kirea.androidnotes.models.NotesService;
 import ru.kirea.androidnotes.views.fragments.NoteFragment;
 
-public class NotePresenter {
+public class NotePresenter extends ViewModel {
     private final String KEY_SELECTED_NOTE_ID = "selectedNoteId";
 
     private Context context;
     private NoteView noteView;
     private NotesService notesService;
 
+    private final MutableLiveData<List<Note>> notesLiveData = new MutableLiveData<>();
+
     private Long selectedNoteId;
 
-    public NotePresenter(Context context, NoteView noteView) {
-        this.context = context;
-        this.noteView = noteView;
-        //notesService = new LocalNotesServiceImpl(); //подключаемся к локальному хранилищу заметок
-        notesService = new BDNoteServiceImpl(); //подключаемся к хранилищу заметок в базе
+    public static NotePresenter builder(Fragment fragment, NoteView noteView) {
+        NotePresenter notePresenter = new ViewModelProvider(fragment).get(NotePresenter.class);
+        notePresenter.setContext(fragment.getContext());
+        notePresenter.setNoteView(noteView);
 
-        notesService.init();
+        //инициализируем БД
+        notePresenter.initBD();
+
+        return notePresenter;
     }
 
-    //получить список заметок
-    public List<Note> getNotes() {
-        return notesService.getNotes();
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+    }
+
+    //получить список заметок в отдельном потоке
+    public void getNotes() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                notesLiveData.postValue(notesService.getNotes());
+            }
+        }).start();
     }
 
     //выбор заметки из общего списка
@@ -88,5 +107,25 @@ public class NotePresenter {
     //удалить заметку
     public void delete(Note note) {
         notesService.deleteNote(note);
+        getNotes();
+    }
+
+    public LiveData<List<Note>> getNotesLiveData() {
+        return notesLiveData;
+    }
+
+    private void setContext(Context context) {
+        this.context = context;
+    }
+
+    private void setNoteView(NoteView noteView) {
+        this.noteView = noteView;
+    }
+
+    //инициализация сервиса по работе с хранилищем
+    private void initBD() {
+        //notesService = new LocalNotesServiceImpl(); //подключаемся к локальному хранилищу заметок
+        notesService = new BDNoteServiceImpl(); //подключаемся к хранилищу заметок в базе
+        notesService.init();
     }
 }
