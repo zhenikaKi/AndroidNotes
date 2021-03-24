@@ -163,6 +163,6 @@ public class ListNotesFragment extends Fragment implements NoteView, NoteObserve
 
         recyclerNotes.setLayoutManager(new LinearLayoutManager(context));
         recyclerNotes.setItemAnimator(new DefaultItemAnimator());
-        recyclerNotes.addItemDecoration(new DividerItemDecoration(context, LinearLayoutManager.VERTICAL));
+        //recyclerNotes.addItemDecoration(new DividerItemDecoration(context, LinearLayoutManager.VERTICAL));
     }
 }
