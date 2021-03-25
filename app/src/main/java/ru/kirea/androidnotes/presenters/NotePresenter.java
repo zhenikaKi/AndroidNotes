@@ -10,51 +10,42 @@ import android.widget.Toast;
 import java.util.List;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import ru.kirea.androidnotes.R;
 import ru.kirea.androidnotes.db.models.Note;
-import ru.kirea.androidnotes.models.BDNoteServiceImpl;
-import ru.kirea.androidnotes.models.NotesService;
+import ru.kirea.androidnotes.models.NoteViewModel;
 import ru.kirea.androidnotes.views.fragments.NoteFragment;
 
-public class NotePresenter extends ViewModel {
+public class NotePresenter {
     private final String KEY_SELECTED_NOTE_ID = "selectedNoteId";
 
     private Context context;
     private NoteView noteView;
-    private NotesService notesService;
-
-    private final MutableLiveData<List<Note>> notesLiveData = new MutableLiveData<>();
+    private NoteViewModel noteViewModel;
 
     private Long selectedNoteId;
 
-    public static NotePresenter builder(Fragment fragment, NoteView noteView) {
-        NotePresenter notePresenter = new ViewModelProvider(fragment).get(NotePresenter.class);
-        notePresenter.setContext(fragment.getContext());
-        notePresenter.setNoteView(noteView);
-
-        //инициализируем БД
-        notePresenter.initBD();
-
-        return notePresenter;
+    private NotePresenter() {
     }
 
-    @Override
-    protected void onCleared() {
-        super.onCleared();
+    public NotePresenter(Fragment fragment, NoteView noteViewInit) {
+        this.context = fragment.getContext();
+        this.noteView = noteViewInit;
+
+        noteViewModel = new ViewModelProvider(fragment).get(NoteViewModel.class);
+        noteViewModel.getNotes(); //сразу запускаем формирование списка заметок
     }
 
-    //получить список заметок в отдельном потоке
-    public void getNotes() {
-        new Thread(new Runnable() {
+    //включить слушателя изменений заметок
+    public void startObserve(LifecycleOwner lifecycleOwner) {
+        noteViewModel.getNotesLiveData().observe(lifecycleOwner, new Observer<List<Note>>() {
             @Override
-            public void run() {
-                notesLiveData.postValue(notesService.getNotes());
+            public void onChanged(List<Note> notes) {
+                noteView.showNotes(notes);
             }
-        }).start();
+        });
     }
 
     //выбор заметки из общего списка
@@ -103,29 +94,13 @@ public class NotePresenter extends ViewModel {
             Toast.makeText(context, context.getResources().getString(R.string.text_copied), Toast.LENGTH_LONG).show();
         }
     }
+    public void getNotes() {
+        noteViewModel.getNotes();
+    }
 
     //удалить заметку
     public void delete(Note note) {
-        notesService.deleteNote(note);
-        getNotes();
-    }
-
-    public LiveData<List<Note>> getNotesLiveData() {
-        return notesLiveData;
-    }
-
-    private void setContext(Context context) {
-        this.context = context;
-    }
-
-    private void setNoteView(NoteView noteView) {
-        this.noteView = noteView;
-    }
-
-    //инициализация сервиса по работе с хранилищем
-    private void initBD() {
-        //notesService = new LocalNotesServiceImpl(); //подключаемся к локальному хранилищу заметок
-        notesService = new BDNoteServiceImpl(); //подключаемся к хранилищу заметок в базе
-        notesService.init();
+        noteViewModel.getNotesService().deleteNote(note);
+        noteViewModel.getNotes();
     }
 }

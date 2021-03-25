@@ -24,7 +24,7 @@
 
     <!-- о приложении -->
     <string name="about_title">Заметки v.%1$s</string>
-    <string name="about_description">Приложения разработано в рамках учебного курса
+    <string name="about_description">Приложение разработано в рамках учебного курса
     <u>Android 1. Знакомство с платформой</u> на факультете <u>Android-разработки</u>
     в Geek University.</string>
     <string name="about_author">Автор: <b>Кирюшин Евгений</b></string>

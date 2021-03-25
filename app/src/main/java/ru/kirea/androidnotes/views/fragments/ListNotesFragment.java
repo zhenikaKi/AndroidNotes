@@ -19,9 +19,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import ru.kirea.androidnotes.R;
@@ -42,8 +40,7 @@ public class ListNotesFragment extends Fragment implements NoteView, NoteObserve
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        notePresenter = NotePresenter.builder(this, this);
-        notePresenter.getNotes(); //сразу запускаем процесс формирования списка заметок
+        notePresenter = new NotePresenter(this, this);
 
         if (notePresenter.isLandscape()) {
             requireActivity().getSupportFragmentManager().popBackStack();
@@ -68,13 +65,7 @@ public class ListNotesFragment extends Fragment implements NoteView, NoteObserve
         Toolbar toolbar = requireActivity().findViewById(R.id.toolbar_id);
         toolbar.setTitle(getString(R.string.menu_notes));
 
-        //слушатель списка заметок
-        notePresenter.getNotesLiveData().observe(getViewLifecycleOwner(), new Observer<List<Note>>() {
-            @Override
-            public void onChanged(List<Note> notes) {
-                showNotes(notes);
-            }
-        });
+        notePresenter.startObserve(getViewLifecycleOwner());
     }
 
     @Override
@@ -129,7 +120,8 @@ public class ListNotesFragment extends Fragment implements NoteView, NoteObserve
     }
 
     //показать список заметок
-    private void showNotes(List<Note> notes) {
+    @Override
+    public void showNotes(List<Note> notes) {
         ListNotesAdapter adapter = new ListNotesAdapter(notes);
         adapter.setNoteClickable(new NoteClickable() {
             @Override
