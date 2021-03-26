@@ -1,6 +1,9 @@
 package ru.kirea.androidnotes.presenters;
 
+import java.util.List;
+
 import androidx.fragment.app.Fragment;
+import ru.kirea.androidnotes.db.models.Note;
 
 public interface NoteView {
 
@@ -9,4 +12,7 @@ public interface NoteView {
 
     //показать заметку в альбомной ориентации
     void showFragmentInLandscape(Fragment fragment);
+
+    //обновить список заметок
+    void showNotes(List<Note> notes);
 }

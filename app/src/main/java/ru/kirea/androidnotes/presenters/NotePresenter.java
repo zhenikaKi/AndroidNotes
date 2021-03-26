@@ -9,10 +9,13 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import ru.kirea.androidnotes.R;
 import ru.kirea.androidnotes.db.models.Note;
-import ru.kirea.androidnotes.models.BDNoteServiceImpl;
-import ru.kirea.androidnotes.models.NotesService;
+import ru.kirea.androidnotes.models.NoteViewModel;
 import ru.kirea.androidnotes.views.fragments.NoteFragment;
 
 public class NotePresenter {
@@ -20,22 +23,29 @@ public class NotePresenter {
 
     private Context context;
     private NoteView noteView;
-    private NotesService notesService;
+    private NoteViewModel noteViewModel;
 
     private Long selectedNoteId;
 
-    public NotePresenter(Context context, NoteView noteView) {
-        this.context = context;
-        this.noteView = noteView;
-        //notesService = new LocalNotesServiceImpl(); //подключаемся к локальному хранилищу заметок
-        notesService = new BDNoteServiceImpl(); //подключаемся к хранилищу заметок в базе
-
-        notesService.init();
+    private NotePresenter() {
     }
 
-    //получить список заметок
-    public List<Note> getNotes() {
-        return notesService.getNotes();
+    public NotePresenter(Fragment fragment, NoteView noteViewInit) {
+        this.context = fragment.getContext();
+        this.noteView = noteViewInit;
+
+        noteViewModel = new ViewModelProvider(fragment).get(NoteViewModel.class);
+        noteViewModel.getNotes(); //сразу запускаем формирование списка заметок
+    }
+
+    //включить слушателя изменений заметок
+    public void startObserve(LifecycleOwner lifecycleOwner) {
+        noteViewModel.getNotesLiveData().observe(lifecycleOwner, new Observer<List<Note>>() {
+            @Override
+            public void onChanged(List<Note> notes) {
+                noteView.showNotes(notes);
+            }
+        });
     }
 
     //выбор заметки из общего списка
@@ -84,9 +94,13 @@ public class NotePresenter {
             Toast.makeText(context, context.getResources().getString(R.string.text_copied), Toast.LENGTH_LONG).show();
         }
     }
+    public void getNotes() {
+        noteViewModel.getNotes();
+    }
 
     //удалить заметку
     public void delete(Note note) {
-        notesService.deleteNote(note);
+        noteViewModel.getNotesService().deleteNote(note);
+        noteViewModel.getNotes();
     }
 }

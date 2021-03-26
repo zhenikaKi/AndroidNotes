@@ -20,7 +20,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import ru.kirea.androidnotes.R;
@@ -41,7 +40,7 @@ public class ListNotesFragment extends Fragment implements NoteView, NoteObserve
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        notePresenter = new NotePresenter(getContext(), this);
+        notePresenter = new NotePresenter(this, this);
 
         if (notePresenter.isLandscape()) {
             requireActivity().getSupportFragmentManager().popBackStack();
@@ -66,7 +65,7 @@ public class ListNotesFragment extends Fragment implements NoteView, NoteObserve
         Toolbar toolbar = requireActivity().findViewById(R.id.toolbar_id);
         toolbar.setTitle(getString(R.string.menu_notes));
 
-        showNotes();
+        notePresenter.startObserve(getViewLifecycleOwner());
     }
 
     @Override
@@ -101,7 +100,7 @@ public class ListNotesFragment extends Fragment implements NoteView, NoteObserve
 
     @Override
     public void updateNotes() {
-        showNotes();
+        notePresenter.getNotes();
     }
 
     @Override
@@ -121,9 +120,8 @@ public class ListNotesFragment extends Fragment implements NoteView, NoteObserve
     }
 
     //показать список заметок
-    private void showNotes() {
-        List<Note> notes = notePresenter.getNotes();
-
+    @Override
+    public void showNotes(List<Note> notes) {
         ListNotesAdapter adapter = new ListNotesAdapter(notes);
         adapter.setNoteClickable(new NoteClickable() {
             @Override
@@ -146,7 +144,6 @@ public class ListNotesFragment extends Fragment implements NoteView, NoteObserve
                                 break;
                             case R.id.menu_delete_id: //удалить заметку
                                 notePresenter.delete(note);
-                                showNotes();
                         }
                         return true;
                     }
@@ -158,6 +155,6 @@ public class ListNotesFragment extends Fragment implements NoteView, NoteObserve
 
         recyclerNotes.setLayoutManager(new LinearLayoutManager(context));
         recyclerNotes.setItemAnimator(new DefaultItemAnimator());
-        recyclerNotes.addItemDecoration(new DividerItemDecoration(context, LinearLayoutManager.VERTICAL));
+        //recyclerNotes.addItemDecoration(new DividerItemDecoration(context, LinearLayoutManager.VERTICAL));
     }
 }

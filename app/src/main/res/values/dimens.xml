@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="item_padding">10dp</dimen>
+    <dimen name="item_padding_mini">5dp</dimen>
     <dimen name="title_size">16sp</dimen>
     <dimen name="description_size">14sp</dimen>
     <dimen name="date_size">10sp</dimen>
@@ -11,4 +12,5 @@
     <dimen name="about_description_size">18sp</dimen>
     <dimen name="item_padding_author">20dp</dimen>
     <dimen name="menu_height">30dp</dimen>
+    <dimen name="card_radius">10dp</dimen>
 </resources>
