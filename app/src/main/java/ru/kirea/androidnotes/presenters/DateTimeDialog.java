@@ -1,26 +1,29 @@
 package ru.kirea.androidnotes.presenters;
 
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
-import android.content.Context;
-import android.widget.DatePicker;
-import android.widget.TimePicker;
+import android.view.View;
+
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 
 import java.util.Calendar;
 
+import androidx.fragment.app.FragmentManager;
+import ru.kirea.androidnotes.R;
+
 //класс по работе с окном выбора даты, времени
 public class DateTimeDialog {
-    private Context context;
-
-    //отдельно день, месяц, год, часы, минуты, секунды
+    //отдельно минуты, секунды
     private Calendar calendar;
-    private int dateDD, dateMM, dateYYYY;
+    private long selectedDate;
     private int timeHH, timeMM;
 
     private DateTimeListener dateTimeListener;
+    private FragmentManager fragmentManager;
 
-    public DateTimeDialog(Context context, long dateTime) {
-        this.context = context;
+    public DateTimeDialog(FragmentManager fragmentManager, long dateTime) {
+        this.fragmentManager = fragmentManager;
         setDate(dateTime);
     }
 
@@ -34,48 +37,57 @@ public class DateTimeDialog {
         calendar = Calendar.getInstance();
         if (dateTime != 0) {
             calendar.setTimeInMillis(dateTime);
+            selectedDate = dateTime;
+        } else {
+            selectedDate = System.currentTimeMillis();
         }
-        dateDD = calendar.get(Calendar.DAY_OF_MONTH);
-        dateMM = calendar.get(Calendar.MONTH);
-        dateYYYY = calendar.get(Calendar.YEAR);
         timeHH = calendar.get(Calendar.HOUR_OF_DAY);
         timeMM = calendar.get(Calendar.MINUTE);
     }
 
     //Показать окно выбора даты
     public void showDate() {
-        new DatePickerDialog(context, dateSetListener, dateYYYY, dateMM, dateDD).show();
+        MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
+        builder.setSelection(selectedDate);
+        builder.setTitleText(R.string.date_dialog_title);
+
+        MaterialDatePicker<Long> datePicker = builder.build();
+        datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
+            @Override
+            public void onPositiveButtonClick(Long selection) {
+                if (dateTimeListener != null) {
+                    dateTimeListener.selectedDateTime(selection);
+                }
+            }
+        });
+
+        datePicker.show(fragmentManager, null);
+
     }
 
     //Показзать окно выбора времени
     public void showTime() {
-        new TimePickerDialog(context, timeSetListener, timeHH, timeMM, true).show();
+        final MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
+                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .setHour(timeHH)
+                .setMinute(timeMM)
+                .setTitleText(R.string.time_dialog_title)
+                .build();
+
+        timePicker.addOnPositiveButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
+                calendar.set(Calendar.MINUTE, timePicker.getMinute());
+
+                if (dateTimeListener != null) {
+                    dateTimeListener.selectedDateTime(calendar.getTimeInMillis());
+                }
+            }
+        });
+
+        timePicker.show(fragmentManager, null);
     }
-
-    //Обработка выбора даты
-    private DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            calendar.set(Calendar.YEAR, year);
-            calendar.set(Calendar.MONTH, monthOfYear);
-            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-            if (dateTimeListener != null)
-                dateTimeListener.selectedDateTime(calendar.getTimeInMillis());
-        }
-    };
-
-    //Обработка выбора времени
-    private TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
-        @Override
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-            calendar.set(Calendar.MINUTE, minute);
-
-            if (dateTimeListener != null)
-                dateTimeListener.selectedDateTime(calendar.getTimeInMillis());
-        }
-    };
 
     public interface DateTimeListener {
         void selectedDateTime(long millis);

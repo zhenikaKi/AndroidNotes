@@ -3,6 +3,8 @@ package ru.kirea.androidnotes.presenters;
 import android.content.Context;
 import android.content.res.Configuration;
 
+import androidx.fragment.app.FragmentManager;
+import ru.kirea.androidnotes.AppNotes;
 import ru.kirea.androidnotes.db.models.Note;
 import ru.kirea.androidnotes.models.BDNoteServiceImpl;
 import ru.kirea.androidnotes.models.NotesService;
@@ -27,17 +29,17 @@ public class NoteEditPresenter {
     }
 
     //обработка выбора даты
-    public void createDateClicked(long dateTime) {
-        showDateTimeDialog(dateTime, true);
+    public void createDateClicked(FragmentManager fragmentManager, long dateTime) {
+        showDateTimeDialog(fragmentManager, dateTime, true);
     }
 
     //обработка выбора времени
-    public void createTimeClicked(long dateTime) {
-        showDateTimeDialog(dateTime, false);
+    public void createTimeClicked(FragmentManager fragmentManager, long dateTime) {
+        showDateTimeDialog(fragmentManager, dateTime, false);
     }
 
-    private void showDateTimeDialog(long dateTime, boolean date) {
-        DateTimeDialog dateTimeDialog = new DateTimeDialog(context, dateTime);
+    private void showDateTimeDialog(FragmentManager fragmentManager, long dateTime, boolean date) {
+        DateTimeDialog dateTimeDialog = new DateTimeDialog(fragmentManager, dateTime);
         dateTimeDialog.setDateTimeListener(new DateTimeDialog.DateTimeListener() {
             @Override
             public void selectedDateTime(long dateTime) {

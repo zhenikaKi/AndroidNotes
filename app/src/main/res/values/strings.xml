@@ -33,4 +33,6 @@
     <!-- настройки -->
     <string name="setting_title">Настройки приложения</string>
     <string name="setting_description">. . . .</string>
+    <string name="date_dialog_title">Выбор даты</string>
+    <string name="time_dialog_title">Выбор времени</string>
 </resources>

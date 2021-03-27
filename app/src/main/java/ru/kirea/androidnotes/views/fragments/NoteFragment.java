@@ -113,9 +113,9 @@ public class NoteFragment extends Fragment implements NoteEditView {
         public void onClick(View v) {
             int id = v.getId();
             if (id == R.id.edit_date_id) { //поле выбора даты создания
-                noteEditPresenter.createDateClicked(createDate);
+                noteEditPresenter.createDateClicked(getFragmentManager(), createDate);
             } else if (id == R.id.edit_time_id) { //поле выбора времени создания
-                noteEditPresenter.createTimeClicked(createDate);
+                noteEditPresenter.createTimeClicked(getFragmentManager(), createDate);
             } else if (id == R.id.button_save_id) { //кнопка сохранения
                 String title = editTitle.getText().toString();
                 if (title.isEmpty()) {
