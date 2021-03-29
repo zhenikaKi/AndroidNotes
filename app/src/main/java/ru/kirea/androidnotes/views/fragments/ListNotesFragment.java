@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.Iterator;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -23,7 +24,10 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import ru.kirea.androidnotes.R;
+import ru.kirea.androidnotes.db.models.ItemType;
 import ru.kirea.androidnotes.db.models.Note;
+import ru.kirea.androidnotes.db.models.Title;
+import ru.kirea.androidnotes.helpers.DateHelper;
 import ru.kirea.androidnotes.models.NoteClickable;
 import ru.kirea.androidnotes.models.NotePublisher;
 import ru.kirea.androidnotes.presenters.ListNotesAdapter;
@@ -121,7 +125,7 @@ public class ListNotesFragment extends Fragment implements NoteView, NoteObserve
 
     //показать список заметок
     @Override
-    public void showNotes(List<Note> notes) {
+    public void showNotes(List<ItemType> notes) {
         ListNotesAdapter adapter = new ListNotesAdapter(notes);
         adapter.setNoteClickable(new NoteClickable() {
             @Override

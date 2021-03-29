@@ -3,7 +3,7 @@ package ru.kirea.androidnotes.presenters;
 import java.util.List;
 
 import androidx.fragment.app.Fragment;
-import ru.kirea.androidnotes.db.models.Note;
+import ru.kirea.androidnotes.db.models.ItemType;
 
 public interface NoteView {
 
@@ -14,5 +14,5 @@ public interface NoteView {
     void showFragmentInLandscape(Fragment fragment);
 
     //обновить список заметок
-    void showNotes(List<Note> notes);
+    void showNotes(List<ItemType> notes);
 }

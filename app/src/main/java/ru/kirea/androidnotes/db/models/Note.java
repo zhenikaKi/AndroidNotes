@@ -8,13 +8,14 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import ru.kirea.androidnotes.db.DBConsts;
 import ru.kirea.androidnotes.models.LocalNotesServiceImpl;
+import ru.kirea.androidnotes.presenters.ListNotesAdapter;
 
 @Entity(tableName = DBConsts.TABLE_NOTES,
         indices = {
                 @Index(DBConsts.NOTE_ID),
                 @Index(DBConsts.NOTE_TITLE)
         })
-public class Note {
+public class Note implements ItemType {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = DBConsts.NOTE_ID)
     private long id;
@@ -48,6 +49,11 @@ public class Note {
         if (id != 0) {
             updateDate = System.currentTimeMillis();
         }
+    }
+
+    @Override
+    public int getType() {
+        return ListNotesAdapter.ITEM_NOTE;
     }
 
     public long getId() {
