@@ -14,6 +14,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import ru.kirea.androidnotes.R;
+import ru.kirea.androidnotes.db.models.ItemType;
 import ru.kirea.androidnotes.db.models.Note;
 import ru.kirea.androidnotes.models.NoteViewModel;
 import ru.kirea.androidnotes.views.fragments.NoteFragment;
@@ -40,9 +41,12 @@ public class NotePresenter {
 
     //включить слушателя изменений заметок
     public void startObserve(LifecycleOwner lifecycleOwner) {
-        noteViewModel.getNotesLiveData().observe(lifecycleOwner, new Observer<List<Note>>() {
+        noteViewModel.getNotesLiveData().observe(lifecycleOwner, new Observer<List<ItemType>>() {
             @Override
-            public void onChanged(List<Note> notes) {
+            public void onChanged(List<ItemType> notes) {
+
+
+
                 noteView.showNotes(notes);
             }
         });

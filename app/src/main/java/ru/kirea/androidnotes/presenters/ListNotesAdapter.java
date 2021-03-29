@@ -9,26 +9,41 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import ru.kirea.androidnotes.R;
+import ru.kirea.androidnotes.db.models.ItemType;
+import ru.kirea.androidnotes.db.models.Note;
+import ru.kirea.androidnotes.db.models.Title;
 import ru.kirea.androidnotes.helpers.DateHelper;
 import ru.kirea.androidnotes.models.ItemAdapterClickable;
-import ru.kirea.androidnotes.db.models.Note;
 import ru.kirea.androidnotes.models.NoteClickable;
 import ru.kirea.androidnotes.views.viewholders.ItemNoteViewHolder;
+import ru.kirea.androidnotes.views.viewholders.ItemTitleViewHolder;
 
 public class ListNotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+	public static final int ITEM_TITLE = 1; //элемент заголовка
+	public static final int ITEM_NOTE = 2; //элемент заметки
 
-	private List<Note> items;
+	private List<ItemType> items;
 	private NoteClickable noteClickable;
 
-	public ListNotesAdapter(List<Note> items) {
+	public ListNotesAdapter(List<ItemType> items) {
 		this.items = items;
 	}
 
 	@Override
 	public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
 		LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
-		View v = layoutInflater.inflate(R.layout.item_note, viewGroup, false);
-		return new ItemNoteViewHolder(v);
+		if (viewType == ITEM_TITLE) {
+			View v = layoutInflater.inflate(R.layout.item_title, viewGroup, false);
+			return new ItemTitleViewHolder(v);
+		} else {
+			View v = layoutInflater.inflate(R.layout.item_note, viewGroup, false);
+			return new ItemNoteViewHolder(v);
+		}
+	}
+
+	@Override
+	public int getItemViewType(int position) {
+		return items.get(position).getType();
 	}
 
 	@Override
@@ -38,10 +53,27 @@ public class ListNotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
 	@Override
 	public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
-		ItemNoteViewHolder noteViewHolder = (ItemNoteViewHolder) holder;
+		if (getItemViewType(position) == ITEM_TITLE) {
+			showItemTitle((ItemTitleViewHolder) holder, position);
+		} else {
+			showItemNote((ItemNoteViewHolder) holder, position);
+		}
+	}
 
+	public void setNoteClickable(NoteClickable noteClickable) {
+		this.noteClickable = noteClickable;
+	}
+
+	//показать элемент в виде заголовка
+	private void showItemTitle(ItemTitleViewHolder holder, int position) {
+		Title titleItem = (Title) items.get(position);
+		holder.getTitle().setText(titleItem.getText());
+	}
+
+	//показать элемент в виде заметки
+	private void showItemNote(ItemNoteViewHolder noteViewHolder, int position) {
 		//получаем заметку и показываем ее
-		Note note = items.get(position);
+		Note note = (Note) items.get(position);
 		noteViewHolder.getTitle().setText(note.getTitle());
 		noteViewHolder.getDescription().setText(note.getDescription());
 		String date = DateHelper.timestampToString(note.getCreateDate(), DateHelper.DateFormat.DDMMYYYY_HHMM);
@@ -54,19 +86,14 @@ public class ListNotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 			noteViewHolder.setItemAdapterClickable(new ItemAdapterClickable() {
 				@Override
 				public void itemClick(int position) {
-					noteClickable.noteClick(items.get(position));
+					noteClickable.noteClick((Note) items.get(position));
 				}
 
 				@Override
 				public void itemMenuClick(View view, int position) {
-					noteClickable.noteMenuClick(view, items.get(position));
+					noteClickable.noteMenuClick(view, (Note) items.get(position));
 				}
 			});
 		}
-
-	}
-
-	public void setNoteClickable(NoteClickable noteClickable) {
-		this.noteClickable = noteClickable;
 	}
 }

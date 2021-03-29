@@ -2,7 +2,8 @@
 <resources>
     <dimen name="item_padding">10dp</dimen>
     <dimen name="item_padding_mini">5dp</dimen>
-    <dimen name="title_size">16sp</dimen>
+    <dimen name="title_text_size">18sp</dimen>
+    <dimen name="note_title_text_size">16sp</dimen>
     <dimen name="description_size">14sp</dimen>
     <dimen name="date_size">10sp</dimen>
     <dimen name="item_date_padding">6dp</dimen>

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorDarkPrimary">#7CAFAB</color>
-    <color name="colorDarkPrimaryDark">#202020</color>
-    <color name="colorDarkAccent">#EBEBBD</color>
+    <color name="color_dark_primary">#7CAFAB</color>
+    <color name="color_dark_primary_dark">#202020</color>
+    <color name="color_dark_accent">#EBEBBD</color>
+
+    <color name="background_color_title">#BAF7D7</color>
+    <color name="text_color_title">#0A8800</color>
 </resources>
