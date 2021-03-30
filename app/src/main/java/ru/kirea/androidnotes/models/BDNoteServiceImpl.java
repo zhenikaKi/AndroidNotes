@@ -16,12 +16,12 @@ public class BDNoteServiceImpl implements NotesService {
     }
 
     @Override
-    public List<Note> getNotes() {
-        return noteDao.getNotes();
+    public void getNotes(Callback<List<Note>> callback) {
+        callback.onResult(noteDao.getNotes());
     }
 
     @Override
-    public Note findNote(long id) {
+    public Note findNote(String id) {
         return noteDao.getNoteOnId(id);
     }
 

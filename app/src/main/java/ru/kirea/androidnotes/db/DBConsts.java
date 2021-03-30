@@ -2,7 +2,7 @@ package ru.kirea.androidnotes.db;
 
 public class DBConsts {
     public static final String NAME = "notes.db";
-    public static final int VERSION = 1;
+    public static final int VERSION = 2;
 
     //таблица заметок
     public static final String TABLE_NOTES = "notes";

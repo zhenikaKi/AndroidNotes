@@ -33,14 +33,14 @@ public class NoteFragment extends Fragment implements NoteEditView {
     private EditText editCreateTime;
     private TextView updateDate;
 
-    private long noteId;
+    private String noteId;
     private long createDate;
     private NoteEditPresenter noteEditPresenter;
     
-    public static NoteFragment newInstance(long noteId) {
+    public static NoteFragment newInstance(String noteId) {
         NoteFragment fragment = new NoteFragment();
         Bundle args = new Bundle();
-        args.putLong(KEY_NOTE_ID, noteId);
+        args.putString(KEY_NOTE_ID, noteId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -49,7 +49,7 @@ public class NoteFragment extends Fragment implements NoteEditView {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            noteId = getArguments().getLong(KEY_NOTE_ID);
+            noteId = getArguments().getString(KEY_NOTE_ID);
         }
         noteEditPresenter = new NoteEditPresenter(getContext(), this);
     }
@@ -141,7 +141,7 @@ public class NoteFragment extends Fragment implements NoteEditView {
 
     //показать данные по заметке
     private void showNote() {
-        if (noteId != 0) {
+        if (noteId != null) {
             Note note = noteEditPresenter.getNote(noteId);
             editTitle.setText(note.getTitle());
             editDescription.setText(note.getDescription());

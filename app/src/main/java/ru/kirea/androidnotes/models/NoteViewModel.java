@@ -40,27 +40,31 @@ public class NoteViewModel extends ViewModel {
         try {
             //ExecutorService executorService = Executors.newFixedThreadPool(10);
             ExecutorService executorService = Executors.newSingleThreadExecutor();
-            Future<List<ItemType>> future = executorService.submit(new Callable<List<ItemType>>(){
-                public List<ItemType> call() {
-                    List<Note> notes = notesService.getNotes();
-                    List<ItemType> result = new ArrayList<>();
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    notesService.getNotes(new Callback<List<Note>>() {
+                        @Override
+                        public void onResult(List<Note> notes) {
+                            List<ItemType> result = new ArrayList<>();
 
-                    //проставим заголовки с датами
-                    String oldTitle = "*";
-                    for (Note note: notes) {
-                        String title = DateHelper.timestampToString(note.getCreateDate(), DateHelper.DateFormat.DDMMYYYY);
-                        if (title != null && !oldTitle.equals(title)) {
-                            result.add(new Title(title));
-                            oldTitle = title;
+                            //проставим заголовки с датами
+                            String oldTitle = "*";
+                            for (Note note: notes) {
+                                String title = DateHelper.timestampToString(note.getCreateDate(), DateHelper.DateFormat.DDMMYYYY);
+                                if (title != null && !oldTitle.equals(title)) {
+                                    result.add(new Title(title));
+                                    oldTitle = title;
+                                }
+                                result.add(note);
+                            }
+
+                            notesLiveData.postValue(result);
                         }
-                        result.add(note);
-                    }
-
-                    return result;
+                    });
                 }
             });
             executorService.shutdown();
-            notesLiveData.postValue(future.get());
         } catch (Exception e) {
             e.printStackTrace();
         }

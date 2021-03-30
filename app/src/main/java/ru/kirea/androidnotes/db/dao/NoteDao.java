@@ -35,7 +35,7 @@ public interface NoteDao {
     @Query("select * " +
             "from " + DBConsts.TABLE_NOTES + " n " +
             "where " + DBConsts.NOTE_ID + " = :id")
-    Note getNoteOnId(long id);
+    Note getNoteOnId(String id);
 
     //Удаление заметки
     @Delete

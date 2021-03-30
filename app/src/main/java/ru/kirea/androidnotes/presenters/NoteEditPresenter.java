@@ -24,7 +24,7 @@ public class NoteEditPresenter {
     }
 
     //получить конкретную заметку
-    public Note getNote(long id) {
+    public Note getNote(String id) {
         return notesService.findNote(id);
     }
 
@@ -54,7 +54,7 @@ public class NoteEditPresenter {
         }
     }
 
-    public void save(long id, String title, String description, long createDate) {
+    public void save(String id, String title, String description, long createDate) {
         Note note = new Note(id, title, description, createDate);
         notesService.saveNote(note);
         noteEditView.saved();

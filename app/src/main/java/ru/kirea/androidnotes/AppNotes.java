@@ -22,6 +22,7 @@ public class AppNotes extends Application {
                 .addCallback(AppDataBase.insertDefaultData) //заполнение параметров по умолчанию
                 //выполнение запросов в основном потоке (это конечно плохо и по хорошему с базой надо работать в фоновом потоке)
                 .allowMainThreadQueries()
+                .addMigrations(AppDataBase.MIGRATION_1_2)
                 .build();
 
         //обработчик ошибок

@@ -12,7 +12,6 @@ import ru.kirea.androidnotes.db.models.Note;
 
 //локальное хранилище заметок
 public class LocalNotesServiceImpl implements NotesService {
-    public static long incrementId = 1; //для автоматического заполнения id'шника заметки
     private static List<Note> notes = new ArrayList<>();
 
     @Override
@@ -23,7 +22,7 @@ public class LocalNotesServiceImpl implements NotesService {
     }
 
     @Override
-    public List<Note> getNotes() {
+    public void getNotes(Callback<List<Note>> callback) {
         //выдаем отсортированный список заметок по дате создания
         List<Note> result = new ArrayList<>(notes);
         Collections.sort(result, new Comparator<Note>() {
@@ -34,13 +33,13 @@ public class LocalNotesServiceImpl implements NotesService {
                 return d2.compareTo(d1);
             }
         });
-        return result;
+        callback.onResult(result);
     }
 
     @Override
-    public Note findNote(long id) {
+    public Note findNote(String id) {
         for (Note note: notes) {
-            if (id == note.getId()) {
+            if (id.equals(note.getId())) {
                 return note;
             }
         }
@@ -88,9 +87,9 @@ public class LocalNotesServiceImpl implements NotesService {
     }
 
     //найти позицию заметки по ее id - вспомогательный метод, т.к. заметки храняться в массиве
-    private Integer getPosition(long id) {
+    private Integer getPosition(String id) {
         for (int ind = 0; ind < notes.size(); ind++) {
-            if (id == notes.get(ind).getId()) {
+            if (id.equals(notes.get(ind).getId())) {
                 return ind;
             }
         }
