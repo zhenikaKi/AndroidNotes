@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import ru.kirea.androidnotes.R;
 import ru.kirea.androidnotes.db.models.Note;
 import ru.kirea.androidnotes.helpers.DateHelper;
+import ru.kirea.androidnotes.models.NoteCallback;
 import ru.kirea.androidnotes.models.NotePublisher;
 import ru.kirea.androidnotes.presenters.NoteEditPresenter;
 import ru.kirea.androidnotes.presenters.NoteEditView;
@@ -142,12 +143,16 @@ public class NoteFragment extends Fragment implements NoteEditView {
     //показать данные по заметке
     private void showNote() {
         if (noteId != null) {
-            Note note = noteEditPresenter.getNote(noteId);
-            editTitle.setText(note.getTitle());
-            editDescription.setText(note.getDescription());
-            showCreateDateTime(note.getCreateDate());
-            String date = note.getUpdateDate() == null ? "" : DateHelper.timestampToString(note.getUpdateDate(), DateHelper.DateFormat.DDMMYYYY_HHMM);
-            updateDate.setText(date);
+            noteEditPresenter.getNote(noteId, new NoteCallback<Note>() {
+                @Override
+                public void onResult(Note note) {
+                    editTitle.setText(note.getTitle());
+                    editDescription.setText(note.getDescription());
+                    showCreateDateTime(note.getCreateDate());
+                    String date = note.getUpdateDate() == null ? "" : DateHelper.timestampToString(note.getUpdateDate(), DateHelper.DateFormat.DDMMYYYY_HHMM);
+                    updateDate.setText(date);
+                }
+            });
         } else { //дата создания заметки - текущая для новых заметок
             showCreateDateTime(System.currentTimeMillis());
         }

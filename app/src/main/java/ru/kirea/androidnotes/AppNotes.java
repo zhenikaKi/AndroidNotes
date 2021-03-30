@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.room.Room;
 import ru.kirea.androidnotes.db.AppDataBase;
 import ru.kirea.androidnotes.db.DBConsts;
+import ru.kirea.androidnotes.models.FireStoreNoteServiceImpl;
+import ru.kirea.androidnotes.models.NotesService;
 
 public class AppNotes extends Application {
     private static final String LOG_TAG = "My";
@@ -51,5 +53,12 @@ public class AppNotes extends Application {
 
     public static void inLog(String text) {
         Log.d(LOG_TAG, text);
+    }
+
+    //получить базу, с которой работает приложение
+    public static NotesService getDBService() {
+        //return new LocalNotesServiceImpl(); //подключаемся к локальному хранилищу заметок
+        //return new BDNoteServiceImpl(); //подключаемся к хранилищу заметок в базе
+        return new FireStoreNoteServiceImpl(); //подключаемся к облачному хранилищу заметок
     }
 }

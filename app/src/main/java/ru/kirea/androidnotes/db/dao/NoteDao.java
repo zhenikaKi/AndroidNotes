@@ -15,7 +15,7 @@ import ru.kirea.androidnotes.db.models.Note;
 public interface NoteDao {
     //добавление заметки
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long add(Note note);
+    void add(Note note);
 
     //добавление заметки
     @Insert(onConflict = OnConflictStrategy.REPLACE)
