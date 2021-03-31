@@ -39,6 +39,9 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:26.8.0')
     implementation 'com.google.firebase:firebase-firestore'
 
+    implementation 'com.google.android.gms:play-services-auth:19.0.0'
+    implementation 'com.vk:androidsdk:2.1.1'
+
     implementation 'androidx.room:room-runtime:2.2.6'
     annotationProcessor 'androidx.room:room-compiler:2.2.6'
 }

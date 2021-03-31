@@ -35,4 +35,13 @@
     <string name="setting_description">. . . .</string>
     <string name="date_dialog_title">Выбор даты</string>
     <string name="time_dialog_title">Выбор времени</string>
+
+    <!-- авторизация -->
+    <integer name="com_vk_sdk_AppId">7808187</integer>
+    <string name="auth_title">Для работы с приложением необходимо авторизоваться</string>
+    <string name="button_google_sign">Google</string>
+    <string name="button_vk_sign">VK</string>
+    <string name="auth_success">Авторизация успешна: %1$s</string>
+    <string name="about_auth">Авторизация</string>
+    <string name="button_sign_out">Выйти</string>
 </resources>

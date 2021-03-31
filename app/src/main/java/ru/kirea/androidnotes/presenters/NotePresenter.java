@@ -44,9 +44,6 @@ public class NotePresenter {
         noteViewModel.getNotesLiveData().observe(lifecycleOwner, new Observer<List<ItemType>>() {
             @Override
             public void onChanged(List<ItemType> notes) {
-
-
-
                 noteView.showNotes(notes);
             }
         });
