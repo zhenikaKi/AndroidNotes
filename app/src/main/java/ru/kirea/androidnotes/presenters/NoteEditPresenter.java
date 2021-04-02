@@ -6,7 +6,7 @@ import android.content.res.Configuration;
 import androidx.fragment.app.FragmentManager;
 import ru.kirea.androidnotes.AppNotes;
 import ru.kirea.androidnotes.db.models.Note;
-import ru.kirea.androidnotes.models.BDNoteServiceImpl;
+import ru.kirea.androidnotes.models.Callback;
 import ru.kirea.androidnotes.models.NotesService;
 
 public class NoteEditPresenter {
@@ -17,15 +17,14 @@ public class NoteEditPresenter {
     public NoteEditPresenter(Context context, NoteEditView noteEditView) {
         this.context = context;
         this.noteEditView = noteEditView;
-        //notesService = new LocalNotesServiceImpl(); //подключаемся к локальному хранилищу заметок
-        notesService = new BDNoteServiceImpl(); //подключаемся к хранилищу заметок в базе
+        notesService = AppNotes.getDBService(); //подключаемся к облачному хранилищу заметок
 
         notesService.init();
     }
 
     //получить конкретную заметку
-    public Note getNote(long id) {
-        return notesService.findNote(id);
+    public void getNote(String id, Callback<Note> callback) {
+        notesService.findNote(id, callback);
     }
 
     //обработка выбора даты
@@ -54,10 +53,14 @@ public class NoteEditPresenter {
         }
     }
 
-    public void save(long id, String title, String description, long createDate) {
+    public void save(String id, String title, String description, long createDate) {
         Note note = new Note(id, title, description, createDate);
-        notesService.saveNote(note);
-        noteEditView.saved();
+        notesService.saveNote(note, new Callback<Note>() {
+            @Override
+            public void onResult(Note value) {
+                noteEditView.saved();
+            }
+        });
     }
 
     //проверить альбомная ли сейчас ориентация

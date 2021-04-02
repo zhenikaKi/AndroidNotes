@@ -2,14 +2,11 @@ package ru.kirea.androidnotes.models;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import ru.kirea.androidnotes.AppNotes;
 import ru.kirea.androidnotes.db.models.ItemType;
 import ru.kirea.androidnotes.db.models.Note;
 import ru.kirea.androidnotes.db.models.Title;
@@ -21,8 +18,7 @@ public class NoteViewModel extends ViewModel {
     private final MutableLiveData<List<ItemType>> notesLiveData = new MutableLiveData<>();
 
     public NoteViewModel() {
-        //notesService = new LocalNotesServiceImpl(); //подключаемся к локальному хранилищу заметок
-        notesService = new BDNoteServiceImpl(); //подключаемся к хранилищу заметок в базе
+        notesService = AppNotes.getDBService(); //подключаемся к облачному хранилищу заметок
         notesService.init();
     }
 
@@ -38,11 +34,9 @@ public class NoteViewModel extends ViewModel {
     //получить список заметок в отдельном потоке
     public void getNotes() {
         try {
-            //ExecutorService executorService = Executors.newFixedThreadPool(10);
-            ExecutorService executorService = Executors.newSingleThreadExecutor();
-            Future<List<ItemType>> future = executorService.submit(new Callable<List<ItemType>>(){
-                public List<ItemType> call() {
-                    List<Note> notes = notesService.getNotes();
+            notesService.getNotes(new Callback<List<Note>>() {
+                @Override
+                public void onResult(List<Note> notes) {
                     List<ItemType> result = new ArrayList<>();
 
                     //проставим заголовки с датами
@@ -56,11 +50,9 @@ public class NoteViewModel extends ViewModel {
                         result.add(note);
                     }
 
-                    return result;
+                    notesLiveData.postValue(result);
                 }
             });
-            executorService.shutdown();
-            notesLiveData.postValue(future.get());
         } catch (Exception e) {
             e.printStackTrace();
         }

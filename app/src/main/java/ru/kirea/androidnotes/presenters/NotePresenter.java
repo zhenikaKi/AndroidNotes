@@ -26,7 +26,7 @@ public class NotePresenter {
     private NoteView noteView;
     private NoteViewModel noteViewModel;
 
-    private Long selectedNoteId;
+    private String selectedNoteId;
 
     private NotePresenter() {
     }
@@ -44,16 +44,13 @@ public class NotePresenter {
         noteViewModel.getNotesLiveData().observe(lifecycleOwner, new Observer<List<ItemType>>() {
             @Override
             public void onChanged(List<ItemType> notes) {
-
-
-
                 noteView.showNotes(notes);
             }
         });
     }
 
     //выбор заметки из общего списка
-    public void noteSelected(long noteId) {
+    public void noteSelected(String noteId) {
         selectedNoteId = noteId;
         if (isLandscape()) { //уведомляем фрагмент о том, что ему надо сбоку показать информацию по заметке
             noteView.showFragmentInLandscape(NoteFragment.newInstance(noteId));
@@ -70,15 +67,15 @@ public class NotePresenter {
     //сохранить настройки
     public void saveInstanceState(Bundle outState) {
         if (selectedNoteId != null) {
-            outState.putLong(KEY_SELECTED_NOTE_ID, selectedNoteId);
+            outState.putString(KEY_SELECTED_NOTE_ID, selectedNoteId);
         }
     }
 
     //загрузить настройки
     public void restoreInstanceState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            long savedNoteId = savedInstanceState.getLong(KEY_SELECTED_NOTE_ID, 0);
-            if (savedNoteId > 0) {
+            String savedNoteId = savedInstanceState.getString(KEY_SELECTED_NOTE_ID);
+            if (savedNoteId != null) {
                 noteSelected(savedNoteId);
             }
         }
@@ -86,7 +83,7 @@ public class NotePresenter {
 
     //добавление новой заметки
     public void addNote() {
-        noteSelected(0);
+        noteSelected(null);
     }
 
     //скопировать текст заметки

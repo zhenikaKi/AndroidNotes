@@ -1,5 +1,8 @@
 package ru.kirea.androidnotes.db.models;
 
+import java.util.UUID;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -16,9 +19,10 @@ import ru.kirea.androidnotes.presenters.ListNotesAdapter;
                 @Index(DBConsts.NOTE_TITLE)
         })
 public class Note implements ItemType {
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
+    @NonNull
     @ColumnInfo(name = DBConsts.NOTE_ID)
-    private long id;
+    private String id;
 
     @ColumnInfo(name = DBConsts.NOTE_TITLE)
     private String title;
@@ -37,17 +41,19 @@ public class Note implements ItemType {
     public Note(String title, String description) {
         this.title = title;
         this.description = description;
-        id = LocalNotesServiceImpl.incrementId++;
+        id = UUID.randomUUID().toString();
         createDate = System.currentTimeMillis();
     }
 
-    public Note(long id, String title, String description, long createDate) {
+    public Note(String id, String title, String description, long createDate) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.createDate = createDate;
-        if (id != 0) {
+        if (id != null) {
             updateDate = System.currentTimeMillis();
+        } else {
+            this.id = UUID.randomUUID().toString();
         }
     }
 
@@ -56,11 +62,11 @@ public class Note implements ItemType {
         return ListNotesAdapter.ITEM_NOTE;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

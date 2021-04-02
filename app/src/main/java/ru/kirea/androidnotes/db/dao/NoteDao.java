@@ -15,7 +15,7 @@ import ru.kirea.androidnotes.db.models.Note;
 public interface NoteDao {
     //добавление заметки
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long add(Note note);
+    void add(Note note);
 
     //добавление заметки
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -35,7 +35,7 @@ public interface NoteDao {
     @Query("select * " +
             "from " + DBConsts.TABLE_NOTES + " n " +
             "where " + DBConsts.NOTE_ID + " = :id")
-    Note getNoteOnId(long id);
+    Note getNoteOnId(String id);
 
     //Удаление заметки
     @Delete

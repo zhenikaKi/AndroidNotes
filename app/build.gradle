@@ -1,6 +1,15 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('./../debugKey.jks')
+            storePassword '000000'
+            keyAlias = 'notes'
+            keyPassword '111111'
+        }
+    }
     compileSdkVersion 29
     buildToolsVersion "30.0.2"
     defaultConfig {
@@ -9,6 +18,7 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
+        signingConfig signingConfigs.debug
     }
     buildTypes {
         release {
@@ -25,6 +35,12 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
+
+    implementation platform('com.google.firebase:firebase-bom:26.8.0')
+    implementation 'com.google.firebase:firebase-firestore'
+
+    implementation 'com.google.android.gms:play-services-auth:19.0.0'
+    implementation 'com.vk:androidsdk:2.1.1'
 
     implementation 'androidx.room:room-runtime:2.2.6'
     annotationProcessor 'androidx.room:room-compiler:2.2.6'

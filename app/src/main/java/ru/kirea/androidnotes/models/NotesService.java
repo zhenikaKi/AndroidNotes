@@ -9,13 +9,13 @@ public interface NotesService {
     void init();
 
     //получить список всех заметок
-    List<Note> getNotes();
+    void getNotes(Callback<List<Note>> callback);
 
     //найти заметку по id
-    Note findNote(long id);
+    void findNote(String id, Callback<Note> callback);
 
     //добавить или обновить заметку
-    void saveNote(Note note);
+    void saveNote(Note note, Callback<Note> callback);
 
     //удалить заметку
     void deleteNote(Note note);
