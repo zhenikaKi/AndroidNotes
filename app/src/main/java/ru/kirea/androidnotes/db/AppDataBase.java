@@ -82,6 +82,8 @@ public abstract class AppDataBase extends RoomDatabase {
                 } while (cursor.moveToNext());
             }
 
+            cursor.close();
+
             db.execSQL("drop table " + DBConsts.TABLE_NOTES + "_tmp");
         }
     };

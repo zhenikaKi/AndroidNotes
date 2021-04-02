@@ -22,7 +22,7 @@ public class LocalNotesServiceImpl implements NotesService {
     }
 
     @Override
-    public void getNotes(NoteCallback<List<Note>> noteCallback) {
+    public void getNotes(Callback<List<Note>> callback) {
         //выдаем отсортированный список заметок по дате создания
         List<Note> result = new ArrayList<>(notes);
         Collections.sort(result, new Comparator<Note>() {
@@ -33,21 +33,21 @@ public class LocalNotesServiceImpl implements NotesService {
                 return d2.compareTo(d1);
             }
         });
-        noteCallback.onResult(result);
+        callback.onResult(result);
     }
 
     @Override
-    public void findNote(String id, NoteCallback<Note> noteCallback) {
+    public void findNote(String id, Callback<Note> callback) {
         for (Note note: notes) {
             if (id.equals(note.getId())) {
-                noteCallback.onResult(note);
+                callback.onResult(note);
             }
         }
-        noteCallback.onResult(null);
+        callback.onResult(null);
     }
 
     @Override
-    public void saveNote(Note note, NoteCallback<Note> noteCallback) {
+    public void saveNote(Note note, Callback<Note> callback) {
         if (note == null) {
             return;
         }
@@ -59,7 +59,7 @@ public class LocalNotesServiceImpl implements NotesService {
         } else {
             notes.set(position, note); //заметка есть, обновляем ее
         }
-        noteCallback.onResult(note);
+        callback.onResult(note);
     }
 
     @Override

@@ -1,5 +1,5 @@
 package ru.kirea.androidnotes.models;
 
-public interface NoteCallback<T> {
+public interface Callback<T> {
     void onResult(T value);
 }

@@ -34,7 +34,7 @@ public class NoteViewModel extends ViewModel {
     //получить список заметок в отдельном потоке
     public void getNotes() {
         try {
-            notesService.getNotes(new NoteCallback<List<Note>>() {
+            notesService.getNotes(new Callback<List<Note>>() {
                 @Override
                 public void onResult(List<Note> notes) {
                     List<ItemType> result = new ArrayList<>();

@@ -30,7 +30,7 @@ public class FireStoreNoteServiceImpl implements NotesService {
     }
 
     @Override
-    public void getNotes(final NoteCallback<List<Note>> noteCallback) {
+    public void getNotes(final Callback<List<Note>> callback) {
         collection.orderBy(DBConsts.NOTE_CREATE_DATE, Query.Direction.DESCENDING).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     // При удачном считывании данных загрузим список карточек
@@ -43,23 +43,23 @@ public class FireStoreNoteServiceImpl implements NotesService {
                             }
                         }
 
-                        noteCallback.onResult(notes);
+                        callback.onResult(notes);
                     }
                 });
     }
 
     @Override
-    public void findNote(String id, final NoteCallback<Note> noteCallback) {
+    public void findNote(String id, final Callback<Note> callback) {
         collection.document(id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                noteCallback.onResult(documentSnapshotToNote(task.getResult()));
+                callback.onResult(documentSnapshotToNote(task.getResult()));
             }
         });
     }
 
     @Override
-    public void saveNote(final Note note, final NoteCallback<Note> noteCallback) {
+    public void saveNote(final Note note, final Callback<Note> callback) {
         if (note == null) {
             return;
         }
@@ -71,7 +71,7 @@ public class FireStoreNoteServiceImpl implements NotesService {
                 public void onComplete(@NonNull Task<DocumentReference> task) {
                     if (task.getResult() != null) {
                         note.setId(task.getResult().getId());
-                        noteCallback.onResult(note);
+                        callback.onResult(note);
                     }
                 }
             });
@@ -79,7 +79,7 @@ public class FireStoreNoteServiceImpl implements NotesService {
             collection.document(note.getId()).set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    noteCallback.onResult(note);
+                    callback.onResult(note);
                 }
             });
         }

@@ -11,10 +11,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import ru.kirea.androidnotes.R;
+import ru.kirea.androidnotes.models.AuthListener;
 import ru.kirea.androidnotes.presenters.AuthPresenter;
 
 public class AuthFragment extends Fragment {
     private AuthPresenter authPresenter;
+    private AuthListener authListener;
+
+    public static AuthFragment newInstance(AuthListener authListener) {
+        AuthFragment authFragment = new AuthFragment();
+        authFragment.setAuthListener(authListener);
+        return authFragment;
+    }
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -23,7 +31,9 @@ public class AuthFragment extends Fragment {
         authPresenter.setOnChaneSignListener(new AuthPresenter.OnChaneSignListener() {
             @Override
             public void changeSigned() {
-                requireActivity().recreate();
+                if (authListener != null) {
+                    authListener.chaneSign();
+                }
             }
         });
     }
@@ -37,6 +47,10 @@ public class AuthFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initButton(view);
+    }
+
+    public void setAuthListener(AuthListener authListener) {
+        this.authListener = authListener;
     }
 
     private void initButton(View view) {

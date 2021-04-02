@@ -35,9 +35,11 @@ public class AuthPresenter {
     private Context context;
     private OnChaneSignListener onChaneSignListener;
     private GoogleSignInClient googleSignInClient;
+    private Preferences preferences;
 
     public AuthPresenter(Context context) {
         this.context = context;
+        preferences = new Preferences(context);
     }
 
     public AuthPresenter(Fragment fragment) {
@@ -46,6 +48,7 @@ public class AuthPresenter {
         if (fragment.getContext() != null) {
             context = fragment.getContext();
             googleSignInClient = AuthHelper.getInstance().getGoogleSignInClient(fragment.getContext());
+            preferences = new Preferences(fragment.getContext());
         }
     }
 
@@ -84,8 +87,8 @@ public class AuthPresenter {
                     public void onLogin(@NotNull VKAccessToken vkAccessToken) {
                         String text = String.format(context.getString(R.string.auth_success), String.valueOf(vkAccessToken.getUserId()));
                         Toast.makeText(context, text, Toast.LENGTH_LONG).show();
-                        Preferences.setSetting(context, Preferences.VK_TOKEN, vkAccessToken.getAccessToken());
-                        Preferences.setSettingInt(context, Preferences.VK_USER_ID, vkAccessToken.getUserId());
+
+                        preferences.setVk(vkAccessToken.getAccessToken(), vkAccessToken.getUserId());
                         if (onChaneSignListener != null) {
                             onChaneSignListener.changeSigned();
                         }
@@ -117,8 +120,9 @@ public class AuthPresenter {
                 });
             }
         } else  if (authType == AuthType.VK) {
-            Preferences.setSetting(context, Preferences.VK_TOKEN, null);
-            Preferences.setSettingInt(context, Preferences.VK_USER_ID, null);
+            if (preferences != null) {
+                preferences.setVk(null, null);
+            }
             if (onChaneSignListener != null) {
                 onChaneSignListener.changeSigned();
             }

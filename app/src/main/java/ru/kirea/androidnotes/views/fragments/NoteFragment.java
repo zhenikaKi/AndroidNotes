@@ -17,7 +17,7 @@ import androidx.fragment.app.Fragment;
 import ru.kirea.androidnotes.R;
 import ru.kirea.androidnotes.db.models.Note;
 import ru.kirea.androidnotes.helpers.DateHelper;
-import ru.kirea.androidnotes.models.NoteCallback;
+import ru.kirea.androidnotes.models.Callback;
 import ru.kirea.androidnotes.models.NotePublisher;
 import ru.kirea.androidnotes.presenters.NoteEditPresenter;
 import ru.kirea.androidnotes.presenters.NoteEditView;
@@ -143,7 +143,7 @@ public class NoteFragment extends Fragment implements NoteEditView {
     //показать данные по заметке
     private void showNote() {
         if (noteId != null) {
-            noteEditPresenter.getNote(noteId, new NoteCallback<Note>() {
+            noteEditPresenter.getNote(noteId, new Callback<Note>() {
                 @Override
                 public void onResult(Note note) {
                     editTitle.setText(note.getTitle());

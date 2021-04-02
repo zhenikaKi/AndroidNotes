@@ -6,7 +6,7 @@ import android.content.res.Configuration;
 import androidx.fragment.app.FragmentManager;
 import ru.kirea.androidnotes.AppNotes;
 import ru.kirea.androidnotes.db.models.Note;
-import ru.kirea.androidnotes.models.NoteCallback;
+import ru.kirea.androidnotes.models.Callback;
 import ru.kirea.androidnotes.models.NotesService;
 
 public class NoteEditPresenter {
@@ -23,8 +23,8 @@ public class NoteEditPresenter {
     }
 
     //получить конкретную заметку
-    public void getNote(String id, NoteCallback<Note> noteCallback) {
-        notesService.findNote(id, noteCallback);
+    public void getNote(String id, Callback<Note> callback) {
+        notesService.findNote(id, callback);
     }
 
     //обработка выбора даты
@@ -55,7 +55,7 @@ public class NoteEditPresenter {
 
     public void save(String id, String title, String description, long createDate) {
         Note note = new Note(id, title, description, createDate);
-        notesService.saveNote(note, new NoteCallback<Note>() {
+        notesService.saveNote(note, new Callback<Note>() {
             @Override
             public void onResult(Note value) {
                 noteEditView.saved();

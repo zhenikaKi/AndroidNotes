@@ -4,55 +4,57 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class Preferences {
+    private Context context;
+
     //настройки приложения
     private static final String PREFERENCE_NAME = "appSettings";
-    public static final String VK_TOKEN = "vkToken";
-    public static final String VK_USER_ID = "vkUserId";
+    private static final String VK_TOKEN = "vkToken";
+    private static final String VK_USER_ID = "vkUserId";
 
-    //сохранить строковый параметр
-    public static void setSetting(Context context, String key, String value) {
-        if (context == null) {
-            return;
-        }
+    public Preferences(Context context) {
+        this.context = context;
+    }
 
+    //сохранить данные ВК
+    public void setVk(String accessToken, Integer userId) {
         SharedPreferences sharedPref = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(key, value);
+
+        //обновляем токен
+        if (accessToken == null) {
+            editor.remove(VK_TOKEN);
+        } else {
+            editor.putString(VK_TOKEN, accessToken);
+        }
+
+        //обновляем пользователя
+        if (userId == null) {
+            editor.remove(VK_USER_ID);
+        } else {
+            editor.putInt(VK_USER_ID, userId);
+        }
+
         editor.apply();
     }
 
-    //получить строковый параметр
-    public static String getSetting(Context context, String key, String defaultValue) {
-        if (context == null) {
-            return defaultValue;
-        }
+    //получить id пользователя из ВК
+    public int getVkUserId() {
+        return getSettingInt(VK_USER_ID, 0);
+    }
 
+    //получить токен из ВК
+    public String getVkToken() {
+        return getSetting(VK_TOKEN, null);
+    }
+
+    //получить строковый параметр
+    private String getSetting(String key, String defaultValue) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getString(key, defaultValue);
     }
 
-    //сохранить числовой параметр
-    public static void setSettingInt(Context context, String key, Integer value) {
-        if (context == null) {
-            return;
-        }
-
-        SharedPreferences sharedPref = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        if (value == null) {
-            editor.remove(key);
-        } else {
-            editor.putInt(key, value);
-        }
-        editor.apply();
-    }
-
     //получить числовой параметр
-    public static int getSettingInt(Context context, String key, int defaultValue) {
-        if (context == null) {
-            return defaultValue;
-        }
-
+    private int getSettingInt(String key, int defaultValue) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getInt(key, defaultValue);
     }

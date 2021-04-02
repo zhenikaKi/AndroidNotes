@@ -13,7 +13,7 @@ public class AuthHelper {
     public final static String KEY_CHANGE_SIGNED = "changeSigned";
 
 
-    private static AuthHelper instance;
+    private static AuthHelper instance = new AuthHelper();
     private GoogleSignInClient googleSignInClient;
     private boolean startedAuth = false;
 
@@ -21,14 +21,6 @@ public class AuthHelper {
     }
 
     public static AuthHelper getInstance() {
-        if (instance == null) {
-            //Сделаем синхронизацию для многопоточности
-            synchronized (AuthHelper.class) {
-                if (instance == null) {
-                    instance = new AuthHelper();
-                }
-            }
-        }
         return instance;
     }
 
@@ -37,6 +29,7 @@ public class AuthHelper {
         if (context == null) {
             return AuthType.NONE;
         }
+        Preferences preferences = new Preferences(context);
 
         //проверяем google
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(context);
@@ -45,7 +38,7 @@ public class AuthHelper {
         }
 
         //проверяем вк
-        String vkToken = Preferences.getSetting(context, Preferences.VK_TOKEN, null);
+        String vkToken = preferences.getVkToken();
         if (vkToken != null) {
             return AuthType.VK;
         }
@@ -64,6 +57,7 @@ public class AuthHelper {
     //получить инфу по авторизации
     public String getAuthInfo(Context context) {
         AuthType authType = getAuthType(context);
+        Preferences preferences = new Preferences(context);
         switch (authType) {
             case GOOGLE:
                 GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(context);
@@ -71,7 +65,7 @@ public class AuthHelper {
                     return account.getEmail();
                 }
             case VK:
-                int vkUserId = Preferences.getSettingInt(context, Preferences.VK_USER_ID, 0);
+                int vkUserId = preferences.getVkUserId();
                 if (vkUserId != 0) {
                     return "id" + vkUserId;
                 }

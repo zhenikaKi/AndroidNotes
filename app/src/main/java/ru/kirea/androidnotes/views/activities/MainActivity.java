@@ -11,11 +11,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import ru.kirea.androidnotes.R;
 import ru.kirea.androidnotes.helpers.AuthHelper;
+import ru.kirea.androidnotes.models.AuthListener;
 import ru.kirea.androidnotes.presenters.AuthPresenter;
 import ru.kirea.androidnotes.views.fragments.AuthFragment;
 import ru.kirea.androidnotes.views.fragments.TabMainFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AuthListener {
 
     private AuthPresenter authPresenter;
 
@@ -28,29 +29,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         AuthHelper.AuthType authType = AuthHelper.getInstance().getAuthType(this);
-
         if (savedInstanceState == null || authType == AuthHelper.AuthType.NONE || AuthHelper.getInstance().isStartedAuth()) {
-            //проверим, авторизован ли пользователь
-            Fragment fragment;
-            if (authType != AuthHelper.AuthType.NONE) {
-                fragment = new TabMainFragment(); //загрузим фрейм со списом заметок по умолчанию
-                AuthHelper.getInstance().setStartedAuth(false);
-            } else {
-                fragment = new AuthFragment(); //загрузим фрейм авторизации
-                authPresenter = new AuthPresenter(this);
-                authPresenter.setOnChaneSignListener(new AuthPresenter.OnChaneSignListener() {
-                    @Override
-                    public void changeSigned() {
-                        recreate();
-                    }
-                });
-                AuthHelper.getInstance().setStartedAuth(true);
-            }
-
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.container_main_id, fragment);
-            fragmentTransaction.commit();
+            chaneSign();
         }
     }
 
@@ -61,5 +41,31 @@ public class MainActivity extends AppCompatActivity {
         if (authPresenter != null) {
             authPresenter.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    public void chaneSign() {
+        //проверим, авторизован ли пользователь
+        AuthHelper.AuthType authType = AuthHelper.getInstance().getAuthType(this);
+        Fragment fragment;
+        if (authType != AuthHelper.AuthType.NONE) {
+            fragment = TabMainFragment.newInstance(this); //загрузим фрейм со списом заметок по умолчанию
+            AuthHelper.getInstance().setStartedAuth(false);
+        } else {
+            fragment = AuthFragment.newInstance(this); //загрузим фрейм авторизации
+            authPresenter = new AuthPresenter(this);
+            authPresenter.setOnChaneSignListener(new AuthPresenter.OnChaneSignListener() {
+                @Override
+                public void changeSigned() {
+                    recreate();
+                }
+            });
+            AuthHelper.getInstance().setStartedAuth(true);
+        }
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.container_main_id, fragment);
+        fragmentTransaction.commit();
     }
 }

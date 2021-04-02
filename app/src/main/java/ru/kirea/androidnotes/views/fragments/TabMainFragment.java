@@ -14,8 +14,17 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import ru.kirea.androidnotes.R;
+import ru.kirea.androidnotes.models.AuthListener;
 
 public class TabMainFragment extends Fragment {
+    private AuthListener authListener;
+
+    public static TabMainFragment newInstance(AuthListener authListener) {
+        TabMainFragment authFragment = new TabMainFragment();
+        authFragment.setAuthListener(authListener);
+        return authFragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_tab_main, container, false);
@@ -52,7 +61,7 @@ public class TabMainFragment extends Fragment {
                         fragment = new SettingsFragment();
                         break;
                     case R.id.menu_about_id: //о приложении
-                        fragment = new AboutFragment();
+                        fragment = AboutFragment.newInstance(authListener);
                         break;
                     default:
                         fragment = new ListNotesFragment();
@@ -69,5 +78,9 @@ public class TabMainFragment extends Fragment {
                 return false;
             }
         });
+    }
+
+    public void setAuthListener(AuthListener authListener) {
+        this.authListener = authListener;
     }
 }
