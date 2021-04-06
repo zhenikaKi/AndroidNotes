@@ -1,17 +1,17 @@
 package ru.kirea.androidnotes.presenters;
 
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import java.util.List;
 
-import androidx.fragment.app.Fragment;
 import ru.kirea.androidnotes.db.models.ItemType;
 
 public interface NoteView {
 
     //показать фрейм в основном контейнере
-    void showFragmentInMain(Fragment fragment);
+    void showFragmentInMain(BottomSheetDialogFragment fragment);
 
     //показать заметку в альбомной ориентации
-    void showFragmentInLandscape(Fragment fragment);
+    void showFragmentInLandscape(BottomSheetDialogFragment fragment);
 
     //обновить список заметок
     void showNotes(List<ItemType> notes);

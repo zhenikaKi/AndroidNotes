@@ -10,6 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -82,16 +84,12 @@ public class ListNotesFragment extends Fragment implements NoteView, NoteObserve
     }
 
     @Override
-    public void showFragmentInMain(Fragment fragment) {
-        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.container_main_id, fragment); // замена фрагмента
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+    public void showFragmentInMain(BottomSheetDialogFragment fragment) {
+        fragment.show(getChildFragmentManager(), NoteFragment.TAG);
     }
 
     @Override
-    public void showFragmentInLandscape(Fragment fragment) {
+    public void showFragmentInLandscape(BottomSheetDialogFragment fragment) {
         FragmentManager fragmentManager = getChildFragmentManager();
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
