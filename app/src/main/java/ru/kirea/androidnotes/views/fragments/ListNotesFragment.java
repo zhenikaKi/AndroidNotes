@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.Iterator;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -26,8 +25,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import ru.kirea.androidnotes.R;
 import ru.kirea.androidnotes.db.models.ItemType;
 import ru.kirea.androidnotes.db.models.Note;
-import ru.kirea.androidnotes.db.models.Title;
-import ru.kirea.androidnotes.helpers.DateHelper;
 import ru.kirea.androidnotes.models.NoteClickable;
 import ru.kirea.androidnotes.models.NotePublisher;
 import ru.kirea.androidnotes.presenters.ListNotesAdapter;
@@ -147,7 +144,17 @@ public class ListNotesFragment extends Fragment implements NoteView, NoteObserve
                                 notePresenter.copyText(note);
                                 break;
                             case R.id.menu_delete_id: //удалить заметку
-                                notePresenter.delete(note);
+                                AlertDeleteDialogFragment.newInstance(note, new AlertDeleteDialogFragment.OnDialogButtonListener() {
+                                    @Override
+                                    public void dialogButtonSuccess(Note note) {
+                                        notePresenter.delete(note);
+                                    }
+
+                                    @Override
+                                    public void dialogButtonCancel() {
+                                    }
+                                }).show(getChildFragmentManager(), AlertDeleteDialogFragment.TAG);
+                                break;
                         }
                         return true;
                     }
