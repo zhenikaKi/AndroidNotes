@@ -44,4 +44,10 @@
     <string name="auth_success">Авторизация успешна: %1$s</string>
     <string name="about_auth">Авторизация</string>
     <string name="button_sign_out">Выйти</string>
+
+    <!-- диалоговые окна -->
+    <string name="dialog_delete_title">Удаление</string>
+    <string name="dialog_delete_message">Вы уверены, что хотите удалить заметку «%1$s»?</string>
+    <string name="dialog_button_delete">Удалить</string>
+    <string name="dialog_button_cancel">Отмена</string>
 </resources>

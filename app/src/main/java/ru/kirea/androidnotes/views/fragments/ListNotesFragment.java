@@ -10,7 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.Iterator;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -26,8 +27,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import ru.kirea.androidnotes.R;
 import ru.kirea.androidnotes.db.models.ItemType;
 import ru.kirea.androidnotes.db.models.Note;
-import ru.kirea.androidnotes.db.models.Title;
-import ru.kirea.androidnotes.helpers.DateHelper;
 import ru.kirea.androidnotes.models.NoteClickable;
 import ru.kirea.androidnotes.models.NotePublisher;
 import ru.kirea.androidnotes.presenters.ListNotesAdapter;
@@ -85,16 +84,12 @@ public class ListNotesFragment extends Fragment implements NoteView, NoteObserve
     }
 
     @Override
-    public void showFragmentInMain(Fragment fragment) {
-        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.container_main_id, fragment); // замена фрагмента
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+    public void showFragmentInMain(BottomSheetDialogFragment fragment) {
+        fragment.show(getChildFragmentManager(), NoteFragment.TAG);
     }
 
     @Override
-    public void showFragmentInLandscape(Fragment fragment) {
+    public void showFragmentInLandscape(BottomSheetDialogFragment fragment) {
         FragmentManager fragmentManager = getChildFragmentManager();
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -147,7 +142,17 @@ public class ListNotesFragment extends Fragment implements NoteView, NoteObserve
                                 notePresenter.copyText(note);
                                 break;
                             case R.id.menu_delete_id: //удалить заметку
-                                notePresenter.delete(note);
+                                AlertDeleteDialogFragment.newInstance(note, new AlertDeleteDialogFragment.OnDialogButtonListener() {
+                                    @Override
+                                    public void dialogButtonSuccess(Note note) {
+                                        notePresenter.delete(note);
+                                    }
+
+                                    @Override
+                                    public void dialogButtonCancel() {
+                                    }
+                                }).show(getChildFragmentManager(), AlertDeleteDialogFragment.TAG);
+                                break;
                         }
                         return true;
                     }

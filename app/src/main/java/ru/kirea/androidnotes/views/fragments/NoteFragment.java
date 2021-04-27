@@ -8,12 +8,12 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.textfield.TextInputLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
 import ru.kirea.androidnotes.R;
 import ru.kirea.androidnotes.db.models.Note;
 import ru.kirea.androidnotes.helpers.DateHelper;
@@ -22,8 +22,9 @@ import ru.kirea.androidnotes.models.NotePublisher;
 import ru.kirea.androidnotes.presenters.NoteEditPresenter;
 import ru.kirea.androidnotes.presenters.NoteEditView;
 
-public class NoteFragment extends Fragment implements NoteEditView {
+public class NoteFragment  extends BottomSheetDialogFragment implements NoteEditView {
     public static final String KEY_NOTE_ID = "noteId";
+    public static final String TAG = "CustomBottomSheet";
 
     private TextInputLayout inputTitle;
     private TextInputLayout inputDescription;
